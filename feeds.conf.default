@@ -1,0 +1,5 @@
+src-git packages https://code.aliyun.com/openwrt/packages.git;21.02
+src-git luci https://code.aliyun.com/openwrt/luci.git;21.02
+src-git routing https://git.openwrt.org/feed/routing.git^25e76489c83cfcee61e36a491896e1e9bfc3ec13
+src-git-full telephony https://git.openwrt.org/feed/telephony.git^89cc8fccf757614eac1d45a684f4971393e0d984
+src-git gavin https://code.aliyun.com/openwrt/gavin.git;21.02
