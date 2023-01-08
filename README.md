@@ -29,29 +29,12 @@
    ```
 
 3. 下载 dl 库，编译固件
-（-j 后面是线程数，第一次编译推荐用单线程）
-
-   ```bash
-   make download -j8
-   make V=s -j1 -j$(nproc)
-   ```
-
-编译：
 
 ```bash
-cd lede
+cd g-openwrt
 git pull
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 make defconfig
-make download -j8
-make V=s -j$(nproc)
-```
-
-如果需要重新配置：
-
-```bash
-rm -rf ./tmp && rm -rf .config
-make menuconfig
-make V=s -j$(nproc)
+make download -j$(nproc) && make V=s -j$(nproc)
 ```
