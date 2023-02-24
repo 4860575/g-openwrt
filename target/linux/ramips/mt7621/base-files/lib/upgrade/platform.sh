@@ -56,6 +56,9 @@ platform_do_upgrade() {
 	dlink,dir-1960-a1|\
 	dlink,dir-2640-a1|\
 	dlink,dir-2660-a1|\
+	h3c,tx1800-plus|\
+	h3c,tx1801-plus|\
+	h3c,tx1806|\
 	hiwifi,hc5962|\
 	jcg,q20|\
 	linksys,e5600|\
@@ -69,6 +72,8 @@ platform_do_upgrade() {
 	netgear,r6700-v2|\
 	netgear,r6800|\
 	netgear,r6850|\
+	netgear,r6900-v2|\
+	netgear,r7200|\
 	netgear,wac104|\
 	netgear,wac124|\
 	netis,wf2881|\
