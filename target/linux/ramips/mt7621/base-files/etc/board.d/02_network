@@ -24,9 +24,6 @@ ramips_setup_interfaces()
 		;;
 	ampedwireless,ally-r1900k|\
 	gehua,ghl-r-001|\
-	h3c,tx1800-plus|\
-	h3c,tx1801-plus|\
-	h3c,tx1806|\
 	hiwifi,hc5962|\
 	xiaomi,mi-router-3-pro|\
 	xiaomi,mi-router-ac2100|\
@@ -49,8 +46,7 @@ ramips_setup_interfaces()
 	xiaomi,mi-router-3g|\
 	xiaomi,mi-router-3g-v2|\
 	xiaomi,mi-router-4|\
-	xiaomi,mi-router-4a-gigabit|\
-	xiaomi,mi-router-4a-gigabit-v2)
+	xiaomi,mi-router-4a-gigabit)
 		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 		;;
 	gnubee,gb-pc1)
@@ -132,13 +128,6 @@ ramips_setup_macs()
 		lan_mac=$(mtd_get_mac_ascii u-boot-env ethaddr)
 		wan_mac=$(mtd_get_mac_ascii u-boot-env wanaddr)
 		label_mac=$wan_mac
-		;;
-	h3c,tx1800-plus|\
-	h3c,tx1801-plus|\
-	h3c,tx1806)
-		label_mac=$(mtd_get_mac_ascii u-boot-env ethaddr)
-		lan_mac=$(macaddr_add "$label_mac" 1)
-		wan_mac=$label_mac
 		;;
 	hiwifi,hc5962)
 		lan_mac=$(mtd_get_mac_ascii bdinfo "Vfac_mac ")
