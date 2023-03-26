@@ -2,4 +2,5 @@ src-git packages https://github.com/4860575/g-packages.git^1856e65e5bf858eac99a3
 src-git luci https://github.com/4860575/g-luci.git^3afd93ab5af4d6c122cc07bb266dbd8b4d729699
 src-git routing https://git.openwrt.org/feed/routing.git^25e76489c83cfcee61e36a491896e1e9bfc3ec13
 src-git telephony https://git.openwrt.org/feed/telephony.git^89cc8fccf757614eac1d45a684f4971393e0d984
-src-git gavin https://github.com/4860575/gavin.git^61bffdea2fd216f9e3f4d3de10a2294675f7a1a8
+#src-git gavin https://github.com/4860575/gavin.git^61bffdea2fd216f9e3f4d3de10a2294675f7a1a8
+src-git gavin https://github.com/4860575/gavin.git
