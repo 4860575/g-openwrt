@@ -248,7 +248,6 @@ define Device/buffalo_wsr-2533dhpl
   DEVICE_ALT0_MODEL := WSR-2533DHP
   IMAGE/sysupgrade.bin := trx | pad-rootfs | append-metadata
   DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware
-  DEFAULT := n
 endef
 TARGET_DEVICES += buffalo_wsr-2533dhpl
 
@@ -783,15 +782,6 @@ define Device/jcg_y2
   DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware kmod-usb3
 endef
 TARGET_DEVICES += jcg_y2
-
-define Device/jdcloud_re-sp-01b
-  IMAGE_SIZE := 27328k
-  DEVICE_VENDOR := JDCloud
-  DEVICE_MODEL := RE-SP-01B
-  DEVICE_PACKAGES := kmod-fs-ext4 kmod-mt7603 kmod-mt7615e \
-	kmod-mt7615-firmware kmod-sdhci-mt7620 kmod-usb3
-endef
-TARGET_DEVICES += jdcloud_re-sp-01b
 
 define Device/lenovo_newifi-d1
   $(Device/dsa-migration)
@@ -1532,40 +1522,6 @@ define Device/xiaomi_mi-router-ac2100
 endef
 TARGET_DEVICES += xiaomi_mi-router-ac2100
 
-define Device/xiaomi_mi-router-cr660x
-  $(Device/dsa-migration)
-  $(Device/uimage-lzma-loader)
-  DEVICE_VENDOR := Xiaomi
-  BLOCKSIZE := 128k
-  PAGESIZE := 2048
-  KERNEL_SIZE := 4096k
-  UBINIZE_OPTS := -E 5
-  IMAGE_SIZE := 128512k
-  IMAGES += firmware.bin
-  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-  IMAGE/firmware.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
-	check-size
-  DEVICE_PACKAGES += kmod-mt7915e uboot-envtools
-endef
-
-define Device/xiaomi_mi-router-cr6606
-  $(Device/xiaomi_mi-router-cr660x)
-  DEVICE_MODEL := Mi Router CR6606
-endef
-TARGET_DEVICES += xiaomi_mi-router-cr6606
-
-define Device/xiaomi_mi-router-cr6608
-  $(Device/xiaomi_mi-router-cr660x)
-  DEVICE_MODEL := Mi Router CR6608
-endef
-TARGET_DEVICES += xiaomi_mi-router-cr6608
-
-define Device/xiaomi_mi-router-cr6609
-  $(Device/xiaomi_mi-router-cr660x)
-  DEVICE_MODEL := Mi Router CR6609
-endef
-TARGET_DEVICES += xiaomi_mi-router-cr6609
-
 define Device/xiaomi_redmi-router-ac2100
   $(Device/xiaomi_nand_separate)
   DEVICE_MODEL := Redmi Router AC2100
@@ -1608,10 +1564,8 @@ define Device/youku_yk-l2
   IMAGE_SIZE := 16064k
   DEVICE_VENDOR := Youku
   DEVICE_MODEL := YK-L2
-  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-sdhci-mt7620 \
-	kmod-usb3 kmod-usb-ledtrig-usbport
-  UIMAGE_MAGIC := 0x12291000
-  UIMAGE_NAME := 400000000000000000003000
+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
+	kmod-usb-ledtrig-usbport
 endef
 TARGET_DEVICES += youku_yk-l2
 

@@ -689,7 +689,7 @@ $(eval $(call KernelPackage,mppe))
 
 
 SCHED_MODULES = $(patsubst $(LINUX_DIR)/net/sched/%.ko,%,$(wildcard $(LINUX_DIR)/net/sched/*.ko))
-SCHED_MODULES_CORE = sch_ingress sch_fq_codel sch_hfsc sch_htb sch_tbf cls_basic cls_fw cls_route cls_flow cls_tcindex cls_u32 em_u32 act_gact act_mirred act_skbedit cls_matchall
+SCHED_MODULES_CORE = sch_ingress sch_fq_codel sch_hfsc sch_htb sch_tbf cls_basic cls_fw cls_route cls_flow cls_u32 em_u32 act_gact act_mirred act_skbedit cls_matchall
 SCHED_MODULES_FILTER = $(SCHED_MODULES_CORE) act_connmark act_ctinfo sch_cake sch_netem sch_mqprio em_ipset cls_bpf cls_flower act_bpf act_vlan
 SCHED_MODULES_EXTRA = $(filter-out $(SCHED_MODULES_FILTER),$(SCHED_MODULES))
 SCHED_FILES = $(patsubst %,$(LINUX_DIR)/net/sched/%.ko,$(filter $(SCHED_MODULES_CORE),$(SCHED_MODULES)))
@@ -711,7 +711,6 @@ define KernelPackage/sched-core
 	CONFIG_NET_CLS_FLOW \
 	CONFIG_NET_CLS_FW \
 	CONFIG_NET_CLS_ROUTE4 \
-	CONFIG_NET_CLS_TCINDEX \
 	CONFIG_NET_CLS_U32 \
 	CONFIG_NET_ACT_GACT \
 	CONFIG_NET_ACT_MIRRED \
@@ -1225,31 +1224,6 @@ define KernelPackage/netlink-diag/description
 endef
 
 $(eval $(call KernelPackage,netlink-diag))
-
-
-define KernelPackage/inet-diag
-  SUBMENU:=$(NETWORK_SUPPORT_MENU)
-  TITLE:=INET diag support for ss utility
-  KCONFIG:= \
-	CONFIG_INET_DIAG \
-	CONFIG_INET_TCP_DIAG \
-	CONFIG_INET_UDP_DIAG \
-	CONFIG_INET_RAW_DIAG \
-	CONFIG_INET_DIAG_DESTROY=n
-  FILES:= \
-	$(LINUX_DIR)/net/ipv4/inet_diag.ko \
-	$(LINUX_DIR)/net/ipv4/tcp_diag.ko \
-	$(LINUX_DIR)/net/ipv4/udp_diag.ko \
-	$(LINUX_DIR)/net/ipv4/raw_diag.ko
-  AUTOLOAD:=$(call AutoLoad,31,inet_diag tcp_diag udp_diag raw_diag)
-endef
-
-define KernelPackage/inet-diag/description
-Support for INET (TCP, DCCP, etc) socket monitoring interface used by
-native Linux tools such as ss.
-endef
-
-$(eval $(call KernelPackage,inet-diag))
 
 
 define KernelPackage/wireguard

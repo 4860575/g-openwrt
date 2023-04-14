@@ -50,7 +50,6 @@ DEFAULT_PACKAGES.router:=\
 	ppp-mod-pppoe
 # For easy usage
 DEFAULT_PACKAGES.tweak:=\
-	block-mount \
 	default-settings-chn \
 	kmod-ipt-raw \
 	kmod-nf-nathelper \
@@ -92,9 +91,6 @@ else
     -include ./$(SUBTARGET)/target.mk
   endif
 endif
-
-# Add tweaked packages
-DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.tweak)
 
 # Add device specific packages (here below to allow device type set from subtarget)
 DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.$(DEVICE_TYPE))
