@@ -7,19 +7,8 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mt_wifi
-
-ifeq ($(CONFIG_MTK_CHIP_MT7981),y)
-PKG_SUFFIX:=mt7981
-else
-ifeq ($(CONFIG_MTK_CHIP_MT7986),y)
-PKG_SUFFIX:=mt7986
-endif
-endif
-
-PKG_BUILD_DEPENDS:=warp
-PKG_SOURCE:=mt798x-7.6.6.1-src.tar.xz
-PKG_VERSION:=7.6.6.1-$(PKG_SUFFIX)
-
+P4REV:=
+PKG_VERSION:=7.6.6.1
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_NAME)
 PKG_KCONFIG:= \
@@ -169,7 +158,6 @@ PKG_KCONFIG:= \
 	ZERO_LOSS_CSA_SUPPORT \
 	VLAN_SUPPORT \
 	DYNAMIC_VLAN_SUPPORT \
-	IAP_VENDOR1_FEATURE_SUPPORT \
 	CUSTOMISED_HOSTAPD_SUPPORT \
 	HOSTAPD_WPA3_SUPPORT \
 	HOSTAPD_WPA3R3_SUPPORT \
@@ -256,19 +244,14 @@ PKG_KCONFIG:= \
 	WIFI_SYSDVT \
 	WARP_V2 \
 	OCE_SUPPORT \
-	WTBL_TDD_SUPPORT \
-	SW_CONNECT_SUPPORT \
 	6G_SUPPORT \
-	BSSMGR_CROSS_MODULE_SUPPORT \
 	WIFI_FW_BIN_LOAD \
 	CONNINFRA_APSOC \
 	MLME_MULTI_QUEUE_SUPPORT \
 	WIFI_SKU_TYPE \
 	MAP_R2_6E_SUPPORT \
-	MAP_R3_6E_SUPPORT \
 	WIFI_SKB_USES_SLAB \
 	WIFI_CSI_CN_INFO_SUPPORT \
-	6G_AFC_SUPPORT \
 
 PKG_CONFIG_DEPENDS:=$(foreach c, $(PKG_KCONFIG),$(if $(CONFIG_MTK_$c),CONFIG_$(c)))
 
@@ -280,11 +263,10 @@ TAR_CMD=$(HOST_TAR) -C $(1)/ $(TAR_OPTIONS)
 define KernelPackage/mt_wifi
   CATEGORY:=MTK Properties
   TITLE:=MTK wifi AP driver
-  DEPENDS:=+wifi-profile
   DEPENDS+=+kmod-conninfra
   DEPENDS+=+kmod-mediatek_hnat
   FILES:=$(PKG_BUILD_DIR)/mt_wifi_ap/mt_wifi.ko \
-	$(PKG_BUILD_DIR)/mt_wifi/embedded/plug_in/warp_proxy/mtk_warp_proxy.ko
+	$(PKG_BUILD_DIR)/mt_wifi_ap/mtk_warp_proxy.ko
   DEPENDS+=+kmod-warp
   AUTOLOAD:=$(call AutoProbe,mt_wifi mtk_warp_proxy)
   SUBMENU:=Drivers
@@ -306,36 +288,16 @@ define Build/Compile
 endef
 
 define KernelPackage/mt_wifi/install
-if [ "$$(CONFIG_MTK_WIFI_FW_BIN_LOAD)" = "y" ]; then \
-	rm -rf $(1)/lib/firmware/; \
-	$(INSTALL_DIR) $(1)/lib/firmware/; \
-	if [ "$$(CONFIG_MTK_CHIP_MT7986)" = "y" ] ; then \
-		$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7986/rebb/WIFI_RAM_CODE_MT7986.bin \
-		$(PKG_BUILD_DIR)/bin/mt7986/rebb/WIFI_RAM_CODE_MT7986_MT7975.bin \
-		$(PKG_BUILD_DIR)/bin/mt7986/rebb/mt7986_patch_e1_hdr.bin \
-		$(PKG_BUILD_DIR)/bin/mt7986/rebb/mt7986_patch_e1_hdr_mt7975.bin \
-		$(PKG_BUILD_DIR)/bin/mt7986/rebb/7986_WACPU_RAM_CODE_release.bin $(1)/lib/firmware/; \
-		if [ "$$(CONFIG_MTK_WIFI_SKU_TYPE)" = "AX6000" -o "$$(CONFIG_MTK_WIFI_SKU_TYPE)" = "AX8400" ] ; then \
-			$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7986/rebb/MT7986_iPAiLNA_EEPROM_AX6000.bin $(PKG_BUILD_DIR)/bin/mt7986/rebb/MT7986_ePAeLNA_EEPROM_AX6000.bin \
-			$(1)/lib/firmware/; \
-		fi; \
-		if [ "$$(CONFIG_MTK_WIFI_SKU_TYPE)" = "AX4200" ] ; then \
-			$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7986/rebb/MT7986_ePAeLNA_EEPROM_ONEADIE_DBDC.bin \
-			$(1)/lib/firmware/; \
-		fi; \
-	fi; \
-	if [ "$$(CONFIG_MTK_CHIP_MT7916)" = "y" ] ; then \
-		$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7916/rebb/* $(1)/lib/firmware/; \
-	fi; \
-	if [ "$$(CONFIG_MTK_CHIP_MT7981)" = "y" ] ; then \
+	rm -rf $(1)/lib/firmware/
+	$(INSTALL_DIR) $(1)/lib/firmware/
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7981/rebb/WIFI_RAM_CODE_MT7981.bin \
 		$(PKG_BUILD_DIR)/bin/mt7981/rebb/7981_WACPU_RAM_CODE_release.bin \
 		$(PKG_BUILD_DIR)/bin/mt7981/rebb/mt7981_patch_e1_hdr.bin \
+		$(PKG_BUILD_DIR)/bin/mt7981/rebb/WIFI_RAM_CODE_MT7981_TESTMODE.bin \
+		$(PKG_BUILD_DIR)/bin/mt7981/rebb/mt7981_patch_e1_hdr_testmode.bin \
 		$(PKG_BUILD_DIR)/bin/mt7981/rebb/MT7981_iPAiLNA_EEPROM.bin \
 		$(PKG_BUILD_DIR)/bin/mt7981/rebb/MT7981_ePAeLNA_EEPROM.bin \
-		$(1)/lib/firmware/; \
-	fi; \
-fi
+		$(1)/lib/firmware
 endef
 
 $(eval $(call KernelPackage,mt_wifi))
