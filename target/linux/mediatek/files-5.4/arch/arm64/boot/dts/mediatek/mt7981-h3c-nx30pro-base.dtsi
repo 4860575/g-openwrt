@@ -1,8 +1,8 @@
 /dts-v1/;
 #include "mt7981.dtsi"
 / {
-	model = "360 T7";
-	compatible = "360,t7", "mediatek,mt7981";
+	model = "H3C NX30PRO";
+	compatible = "h3c,nx30pro", "mediatek,mt7981";
 	chosen {
 		bootargs = "console=ttyS0,115200n1 loglevel=8  \
 				earlycon=uart8250,mmio32,0x11002000";
@@ -16,13 +16,13 @@
 		compatible = "gpio-leds";
 
 		green {
-			label = "360t7:green";
-			gpios = <&pio 7 GPIO_ACTIVE_LOW>;
+			label = "nx30pro:green";
+			gpios = <&pio 4 GPIO_ACTIVE_LOW>;
 		};
 
 		red {
-			label = "360t7:red";
-			gpios = <&pio 3 GPIO_ACTIVE_LOW>;
+			label = "nx30pro:red";
+			gpios = <&pio 5 GPIO_ACTIVE_LOW>;
 		};
 	};
 
@@ -75,18 +75,21 @@
 	gmac1: mac@1 {
 		compatible = "mediatek,eth-mac";
 		reg = <1>;
-		phy-mode = "2500base-x";
-
-		fixed-link {
-			speed = <2500>;
-			full-duplex;
-			pause;
-		};
+		phy-mode = "gmii";
+		phy-handle = <&phy0>;
 	};
 
 	mdio: mdio-bus {
 		#address-cells = <1>;
 		#size-cells = <0>;
+		
+		phy0: phy@0 {
+			compatible = "ethernet-phy-id03a2.9461";
+			reg = <0>;
+			nvmem-cells = <&phy_calibration>;
+			nvmem-cell-names = "phy-cal-data";
+		};
+
 	};
 };
 

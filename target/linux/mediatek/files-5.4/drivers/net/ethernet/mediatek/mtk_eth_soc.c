@@ -2611,27 +2611,29 @@ static int mtk_start_dma(struct mtk_eth *eth)
 	return 0;
 }
 
-void mtk_gdm_config(struct mtk_eth *eth, u32 id, u32 config)
+void mtk_gdm_config(struct mtk_eth *eth, u32 config)
 {
-	u32 val;
+	int i;
 
 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
 		return;
 
-	val = mtk_r32(eth, MTK_GDMA_FWD_CFG(id));
+	for (i = 0; i < MTK_MAC_COUNT; i++) {
+		u32 val = mtk_r32(eth, MTK_GDMA_FWD_CFG(i));
 
-	/* default setup the forward port to send frame to PDMA */
-	val &= ~0xffff;
+		/* default setup the forward port to send frame to PDMA */
+		val &= ~0xffff;
 
-	/* Enable RX checksum */
-	val |= MTK_GDMA_ICS_EN | MTK_GDMA_TCS_EN | MTK_GDMA_UCS_EN;
+		/* Enable RX checksum */
+		val |= MTK_GDMA_ICS_EN | MTK_GDMA_TCS_EN | MTK_GDMA_UCS_EN;
 
-	val |= config;
+		val |= config;
 
-	if (eth->netdev[id] && netdev_uses_dsa(eth->netdev[id]))
-		val |= MTK_GDMA_SPECIAL_TAG;
+		if (eth->netdev[i] && netdev_uses_dsa(eth->netdev[i]))
+			val |= MTK_GDMA_SPECIAL_TAG;
 
-	mtk_w32(eth, val, MTK_GDMA_FWD_CFG(id));
+		mtk_w32(eth, val, MTK_GDMA_FWD_CFG(i));
+	}
 }
 
 static int mtk_open(struct net_device *dev)
@@ -2655,6 +2657,7 @@ static int mtk_open(struct net_device *dev)
 		if (err)
 			return err;
 
+		mtk_gdm_config(eth, MTK_GDMA_TO_PDMA);
 
 		/* Indicates CDM to parse the MTK special tag from CPU */
 		if (netdev_uses_dsa(dev)) {
@@ -2688,9 +2691,6 @@ static int mtk_open(struct net_device *dev)
 	if (!phy_node && eth->sgmii->regmap[mac->id]) {
 		regmap_write(eth->sgmii->regmap[mac->id], SGMSYS_QPHY_PWR_STATE_CTRL, 0);
 	}
-
-	mtk_gdm_config(eth, mac->id, MTK_GDMA_TO_PDMA);
-
 	return 0;
 }
 
@@ -2725,7 +2725,6 @@ static int mtk_stop(struct net_device *dev)
 	u32 val = 0;
 	struct device_node *phy_node;
 
-	mtk_gdm_config(eth, mac->id, MTK_GDMA_DROP_ALL);
 	netif_tx_disable(dev);
 
 	phy_node = of_parse_phandle(mac->of_node, "phy-handle", 0);
@@ -2751,6 +2750,7 @@ static int mtk_stop(struct net_device *dev)
 	if (!refcount_dec_and_test(&eth->dma_refcnt))
 		return 0;
 
+	mtk_gdm_config(eth, MTK_GDMA_DROP_ALL);
 
 	mtk_tx_irq_disable(eth, MTK_TX_DONE_INT);
 	mtk_rx_irq_disable(eth, MTK_RX_DONE_INT(0));

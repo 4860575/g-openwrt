@@ -206,52 +206,6 @@ define Device/mt7981-360-t7-108M
 endef
 TARGET_DEVICES += mt7981-360-t7-108M
 
-define Device/cetron_ct3003
-  DEVICE_VENDOR := CETRON
-  DEVICE_MODEL := CT3003
-  DEVICE_DTS := mt7981-cetron-ct3003
-  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
-  SUPPORTED_DEVICES := cetron,ct3003
-  UBINIZE_OPTS := -E 5
-  BLOCKSIZE := 128k
-  PAGESIZE := 2048
-  IMAGE_SIZE := 114816k
-  KERNEL_IN_UBI := 1
-  IMAGES += factory.bin
-  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
-  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-endef
-TARGET_DEVICES += cetron_ct3003
-
-define Device/xiaomi_mi-router-wr30u-stock
-  DEVICE_VENDOR := Xiaomi
-  DEVICE_MODEL := Mi Router WR30U (stock layout)
-  DEVICE_DTS := mt7981-xiaomi-mi-router-wr30u-stock
-  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
-  UBINIZE_OPTS := -E 5
-  BLOCKSIZE := 128k
-  PAGESIZE := 2048
-  IMAGE_SIZE := 34816k
-  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-endef
-TARGET_DEVICES += xiaomi_mi-router-wr30u-stock
-
-define Device/xiaomi_mi-router-wr30u-112m
-  DEVICE_VENDOR := Xiaomi
-  DEVICE_MODEL := Mi Router WR30U (112M UBI layout)
-  DEVICE_DTS := mt7981-xiaomi-mi-router-wr30u-112m
-  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
-  UBINIZE_OPTS := -E 5
-  BLOCKSIZE := 128k
-  PAGESIZE := 2048
-  IMAGE_SIZE := 114688k
-  KERNEL_IN_UBI := 1
-  IMAGES += factory.ubi
-  IMAGE/factory.ubi := append-ubi | check-size $$$$(IMAGE_SIZE)
-  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-endef
-TARGET_DEVICES += xiaomi_mi-router-wr30u-112m
-
 define Device/glinet_gl-mt3000
   DEVICE_VENDOR := GL.iNet
   DEVICE_MODEL := GL-MT3000
@@ -302,6 +256,23 @@ define Device/glinet_gl-mt2500
 endef
 TARGET_DEVICES += glinet_gl-mt2500
 
+define Device/h3c_nx30pro
+  DEVICE_VENDOR := H3C
+  DEVICE_MODEL := NX30PRO
+  DEVICE_DTS := mt7981-h3c-nx30pro
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  SUPPORTED_DEVICES := h3c,nx30pro
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 64816k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += h3c_nx30pro
+
 define Device/jcg_q30
   DEVICE_VENDOR := JCG
   DEVICE_MODEL := Q30
@@ -319,19 +290,88 @@ define Device/jcg_q30
 endef
 TARGET_DEVICES += jcg_q30
 
-define Device/livinet_zr-3020
-  DEVICE_VENDOR := Livinet
-  DEVICE_MODEL := ZR-3020
-  DEVICE_DTS := mt7981-zr-3020
+define Device/cetron_ct3003
+  DEVICE_VENDOR := CETRON
+  DEVICE_MODEL := CT3003
+  DEVICE_DTS := mt7981-cetron-ct3003
   DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
-  SUPPORTED_DEVICES := livinet,zr-3020 mediatek,mt7981-spim-snand-gsw-rfb
+  SUPPORTED_DEVICES := cetron,ct3003
   UBINIZE_OPTS := -E 5
   BLOCKSIZE := 128k
   PAGESIZE := 2048
-  IMAGE_SIZE := 65536k
+  IMAGE_SIZE := 114816k
   KERNEL_IN_UBI := 1
   IMAGES += factory.bin
   IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
-TARGET_DEVICES += livinet_zr-3020
+TARGET_DEVICES += cetron_ct3003
+
+
+define Device/h3c_nx30pro-112M
+  DEVICE_VENDOR := H3C
+  DEVICE_MODEL := NX30PRO(with 112M ubi)
+  DEVICE_DTS := mt7981-h3c-nx30pro-112M
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  SUPPORTED_DEVICES := h3c,nx30pro
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 114688k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += h3c_nx30pro-112M
+
+define Device/xiaomi_wr30u
+  DEVICE_VENDOR := Xiaomi
+  DEVICE_MODEL := WR30U
+  DEVICE_DTS := mt7981-xiaomi-wr30u
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  SUPPORTED_DEVICES := xiaomi,wr30u
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 34816k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += xiaomi_wr30u
+
+define Device/xiaomi_wr30u-112M
+  DEVICE_VENDOR := Xiaomi
+  DEVICE_MODEL := WR30U (with 112M ubi)
+  DEVICE_DTS := mt7981-xiaomi-wr30u-112M
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  SUPPORTED_DEVICES := xiaomi,wr30u
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 114688k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += xiaomi_wr30u-112M
+
+define Device/mt7981-komi-a31
+  DEVICE_VENDOR := MediaTek
+  DEVICE_MODEL := KOMI A31
+  DEVICE_DTS := mt7981-komi-a31
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  SUPPORTED_DEVICES := komi,a31
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 114688k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += mt7981-komi-a31
