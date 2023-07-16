@@ -12,18 +12,6 @@ PKG_NAME:=wifi-profile
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-2.0
 
-PKG_KCONFIG:= \
-	first_card \
-	first_card_name \
-	second_card \
-	second_card_name \
-	third_card \
-	third_card_name \
-	WIFI_NORMAL_SETTING \
-	WIFI_QUICK_SETTING
-
-PKG_CONFIG_DEPENDS:=$(foreach c, $(PKG_KCONFIG),$(if $(CONFIG_$c),CONFIG_$(c)))
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/wifi-profile
@@ -58,24 +46,14 @@ define Package/wifi-profile/install
 	$(INSTALL_DIR) $(1)/lib/wifi/
 	$(INSTALL_DIR) $(1)/etc/wireless/mediatek/
 	$(INSTALL_DIR) $(1)/sbin/
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/common/kick.sh $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/common/wifi_jedi $(1)/sbin/wifi
 	$(INSTALL_BIN) ./files/common/mtwifi.lua $(1)/lib/wifi/
-
-	if [ "$$(CONFIG_WIFI_QUICK_SETTING)" = "y" ] ; then \
-		$(INSTALL_BIN) ./files/common/quick_setting.lua $(1)/lib/wifi/; \
-	fi
-
-	if [ "$$(CONFIG_first_card_name)" = "MT7986" -o "$$(CONFIG_second_card_name)" = "MT7986" ] ; then \
-		$(INSTALL_DATA) ./files/mt7986/* $(1)/etc/wireless/mediatek/; \
-	fi
-
-	if [ "$$(CONFIG_first_card_name)" = "MT7981" -o "$$(CONFIG_second_card_name)" = "MT7981" ] ; then \
-		$(INSTALL_DATA) ./files/mt7981/* $(1)/etc/wireless/mediatek/; \
-	fi
-
-	if [ -f "$(1)/etc/wireless/mediatek/l1profile.dat" ]; then \
-		mv $(1)/etc/wireless/mediatek/l1profile.dat $(1)/etc/wireless/l1profile.dat ; \
-	fi
+	$(INSTALL_BIN) ./files/common/quick_setting.lua $(1)/lib/wifi/
+	$(INSTALL_DATA) ./files/mt7981/* $(1)/etc/wireless/mediatek/
+	mv $(1)/etc/wireless/mediatek/l1profile.dat $(1)/etc/wireless/l1profile.dat 
+	
 endef
 
 $(eval $(call BuildPackage,wifi-profile))
