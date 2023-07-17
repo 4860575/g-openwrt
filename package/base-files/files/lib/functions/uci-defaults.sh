@@ -39,7 +39,7 @@ ucidef_set_interface() {
 
 		[ -n "$opt" -a -n "$val" ] || break
 
-		[ "$opt" = "device" -a "$val" != "${val/ //}" ] && {
+		[ "$opt" = "ifname" -a "$val" != "${val/ //}" ] && {
 			json_select_array "ports"
 			for e in $val; do json_add_string "" "$e"; done
 			json_close_array
@@ -72,18 +72,12 @@ ucidef_set_model_name() {
 	json_select ..
 }
 
-ucidef_set_compat_version() {
-	json_select_object system
-	json_add_string compat_version "${1:-1.0}"
-	json_select ..
-}
-
 ucidef_set_interface_lan() {
-	ucidef_set_interface "lan" device "$1" protocol "${2:-static}"
+	ucidef_set_interface "lan" ifname "$1" protocol "${2:-static}"
 }
 
 ucidef_set_interface_wan() {
-	ucidef_set_interface "wan" device "$1" protocol "${2:-dhcp}"
+	ucidef_set_interface "wan" ifname "$1" protocol "${2:-dhcp}"
 }
 
 ucidef_set_interfaces_lan_wan() {
@@ -96,7 +90,7 @@ ucidef_set_interfaces_lan_wan() {
 
 ucidef_set_bridge_device() {
 	json_select_object bridge
-	json_add_string name "${1:-switch0}"
+	json_add_string name "${1:switch0}"
 	json_select ..
 }
 
@@ -201,14 +195,14 @@ _ucidef_finish_switch_roles() {
 
 			json_select_object "$role"
 				# attach previous interfaces (for multi-switch devices)
-				json_get_var devices device
+				json_get_var devices ifname
 				if ! list_contains devices "$device"; then
 					devices="${devices:+$devices }$device"
 				fi
 			json_select ..
 		json_select ..
 
-		ucidef_set_interface "$role" device "$devices"
+		ucidef_set_interface "$role" ifname "$devices"
 	done
 }
 
@@ -413,15 +407,6 @@ ucidef_set_led_default() {
 	_ucidef_set_led_common "$1" "$2" "$3"
 
 	json_add_string default "$default"
-	json_select ..
-
-	json_select ..
-}
-
-ucidef_set_led_heartbeat() {
-	_ucidef_set_led_common "$1" "$2" "$3"
-
-	json_add_string trigger heartbeat
 	json_select ..
 
 	json_select ..
@@ -654,5 +639,6 @@ board_config_update() {
 }
 
 board_config_flush() {
-	json_dump -i -o ${CFG}
+	json_dump -i > /tmp/.board.json
+	mv /tmp/.board.json ${CFG}
 }
