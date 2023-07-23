@@ -24,7 +24,6 @@
 struct mtk_snand_plat_dev {
 	struct device *dev;
 	struct completion done;
-	bool poll_mode;
 };
 
 /* Polling helpers */
@@ -103,25 +102,24 @@ static inline void dma_mem_unmap(struct mtk_snand_plat_dev *pdev,
 /* Interrupt helpers */
 static inline void irq_completion_done(struct mtk_snand_plat_dev *pdev)
 {
-	if (!pdev->poll_mode)
-		complete(&pdev->done);
+	complete(&pdev->done);
 }
 
 static inline void irq_completion_init(struct mtk_snand_plat_dev *pdev)
 {
-	if (!pdev->poll_mode)
-		init_completion(&pdev->done);
+	init_completion(&pdev->done);
 }
 
 static inline int irq_completion_wait(struct mtk_snand_plat_dev *pdev,
 				       void __iomem *reg, uint32_t bit,
 				       uint32_t timeout_us)
 {
+#if 0
 	uint32_t val;
-	int ret;
 
-	if (pdev->poll_mode)
-		return read32_poll_timeout(reg, val, val & bit, 0, timeout_us);
+	return read32_poll_timeout(reg, val, val & bit, 0, timeout_us);
+#else
+	int ret;
 
 	ret = wait_for_completion_timeout(&pdev->done,
 					  usecs_to_jiffies(timeout_us));
@@ -129,8 +127,7 @@ static inline int irq_completion_wait(struct mtk_snand_plat_dev *pdev,
 		return -ETIMEDOUT;
 
 	return 0;
+#endif
 }
-
-void mtk_snand_control_poll_mode(struct mtk_snand_plat_dev *pdev, bool enable);
 
 #endif /* _MTK_SNAND_OS_H_ */

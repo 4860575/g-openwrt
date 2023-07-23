@@ -722,29 +722,47 @@ static int mt7988_int_usxgmii_pins[] = { 2, 3 };
 static int mt7988_int_usxgmii_funcs[] = { 3, 3 };
 
 /* pwm */
-static int mt7988_pwm0_pins[] = { 57 };
-static int mt7988_pwm0_funcs[] = { 1 };
+static int mt7988_pwm7_0_pins[] = { 4 };
+static int mt7988_pwm7_0_funcs[] = { 3 };
 
 static int mt7988_pwm1_pins[] = { 21 };
 static int mt7988_pwm1_funcs[] = { 1 };
 
-static int mt7988_pwm2_pins[] = { 80 };
-static int mt7988_pwm2_funcs[] = { 2 };
+static int mt7988_pwm0_pins[] = { 57 };
+static int mt7988_pwm0_funcs[] = { 1 };
 
-static int mt7988_pwm3_pins[] = { 81 };
-static int mt7988_pwm3_funcs[] = { 2 };
+static int mt7988_pwm2_pins[] = { 58 };
+static int mt7988_pwm2_funcs[] = { 5 };
 
-static int mt7988_pwm4_pins[] = { 82 };
-static int mt7988_pwm4_funcs[] = { 2 };
+static int mt7988_pwm3_pins[] = { 59 };
+static int mt7988_pwm3_funcs[] = { 5 };
 
-static int mt7988_pwm5_pins[] = { 83 };
-static int mt7988_pwm5_funcs[] = { 2 };
+static int mt7988_pwm4_pins[] = { 60 };
+static int mt7988_pwm4_funcs[] = { 5 };
 
-static int mt7988_pwm6_pins[] = { 69 };
-static int mt7988_pwm6_funcs[] = { 3 };
+static int mt7988_pwm5_pins[] = { 61 };
+static int mt7988_pwm5_funcs[] = { 5 };
+
+static int mt7988_pwm6_0_pins[] = { 62 };
+static int mt7988_pwm6_0_funcs[] = { 5 };
+
+static int mt7988_pwm6_1_pins[] = { 69 };
+static int mt7988_pwm6_1_funcs[] = { 3 };
 
 static int mt7988_pwm7_pins[] = { 70 };
 static int mt7988_pwm7_funcs[] = { 3 };
+
+static int mt7988_pwm2_1_pins[] = { 80 };
+static int mt7988_pwm2_1_funcs[] = { 2 };
+
+static int mt7988_pwm3_1_pins[] = { 81 };
+static int mt7988_pwm3_1_funcs[] = { 2 };
+
+static int mt7988_pwm4_1_pins[] = { 82 };
+static int mt7988_pwm4_1_funcs[] = { 2 };
+
+static int mt7988_pwm5_1_pins[] = { 83 };
+static int mt7988_pwm5_1_funcs[] = { 2 };
 
 /* dfd */
 static int mt7988_dfd_pins[] = { 0, 1, 2, 3, 4 };
@@ -817,7 +835,7 @@ static int mt7988_i2c1_2_funcs[] = { 2, 2 };
 static int mt7988_i2c2_0_pins[] = { 69, 70 };
 static int mt7988_i2c2_0_funcs[] = { 4, 4 };
 
-static int mt7988_i2c2_1_pins[] = { 71, 72 };
+static int mt7988_i2c2_1_pins[] = { 70, 71 };
 static int mt7988_i2c2_1_funcs[] = { 1, 1 };
 
 /* eth */
@@ -933,9 +951,6 @@ static int mt7988_emmc_45_pins[] = {
 };
 static int mt7988_emmc_45_funcs[] = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
 
-static int mt7988_sdcard_pins[] = { 32, 33, 34, 35, 36, 37 };
-static int mt7988_sdcard_funcs[] = { 5, 5, 5, 5, 5, 5 };
-
 static int mt7988_emmc_51_pins[] = { 38, 39, 40, 41, 42, 43,
 				     44, 45, 46, 47, 48, 49 };
 static int mt7988_emmc_51_funcs[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
@@ -1011,35 +1026,19 @@ static int mt7988_net_wo2_uart_txd_1_funcs[] = { 3 };
 static int mt7988_udi_pins[] = { 32, 33, 34, 35, 36 };
 static int mt7988_udi_funcs[] = { 4, 4, 4, 4, 4 };
 
-/* i2s */
-static int mt7988_i2s_pins[] = { 50, 51, 52, 53, 54 };
-static int mt7988_i2s_funcs[] = { 1, 1, 1, 1, 1 };
-
 /* pcm */
-static int mt7988_pcm_pins[] = { 50, 51, 52, 53 };
-static int mt7988_pcm_funcs[] = { 1, 1, 1, 1 };
+static int mt7988_pcm_pins[] = { 50, 51, 52, 53, 54 };
+static int mt7988_pcm_funcs[] = { 1, 1, 1, 1, 1 };
 
 /* led */
-static int mt7988_gbe0_led1_pins[] = { 58 };
-static int mt7988_gbe0_led1_funcs[] = { 6 };
-static int mt7988_gbe1_led1_pins[] = { 59 };
-static int mt7988_gbe1_led1_funcs[] = { 6 };
-static int mt7988_gbe2_led1_pins[] = { 60 };
-static int mt7988_gbe2_led1_funcs[] = { 6 };
-static int mt7988_gbe3_led1_pins[] = { 61 };
-static int mt7988_gbe3_led1_funcs[] = { 6 };
+static int mt7988_gbe_led1_pins[] = { 58, 59, 60, 61 };
+static int mt7988_gbe_led1_funcs[] = { 6, 6, 6, 6 };
 
 static int mt7988_2p5gbe_led1_pins[] = { 62 };
 static int mt7988_2p5gbe_led1_funcs[] = { 6 };
 
-static int mt7988_gbe0_led0_pins[] = { 64 };
-static int mt7988_gbe0_led0_funcs[] = { 1 };
-static int mt7988_gbe1_led0_pins[] = { 65 };
-static int mt7988_gbe1_led0_funcs[] = { 1 };
-static int mt7988_gbe2_led0_pins[] = { 66 };
-static int mt7988_gbe2_led0_funcs[] = { 1 };
-static int mt7988_gbe3_led0_pins[] = { 67 };
-static int mt7988_gbe3_led0_funcs[] = { 1 };
+static int mt7988_gbe_led0_pins[] = { 64, 65, 66, 67 };
+static int mt7988_gbe_led0_funcs[] = { 1, 1, 1, 1 };
 
 static int mt7988_2p5gbe_led0_pins[] = { 68 };
 static int mt7988_2p5gbe_led0_funcs[] = { 1 };
@@ -1058,6 +1057,8 @@ static const struct group_desc mt7988_groups[] = {
 	PINCTRL_PIN_GROUP("tops_jtag0_0", mt7988_tops_jtag0_0),
 	/*  @GPIO(2,3): int_usxgmii */
 	PINCTRL_PIN_GROUP("int_usxgmii", mt7988_int_usxgmii),
+	/*  @GPIO(4): pwm7_0 */
+	PINCTRL_PIN_GROUP("pwm7_0", mt7988_pwm7_0),
 	/*  @GPIO(0,1,2,3,4): dfd */
 	PINCTRL_PIN_GROUP("dfd", mt7988_dfd),
 	/*  @GPIO(0,1): xfi_phy0_i2c0 */
@@ -1172,17 +1173,13 @@ static const struct group_desc mt7988_groups[] = {
 	PINCTRL_PIN_GROUP("udi", mt7988_udi),
 	/*  @GPIO(21,28,29,30,31,32,33,34,35,36,37) emmc_45 */
 	PINCTRL_PIN_GROUP("emmc_45", mt7988_emmc_45),
-	/*  @GPIO(32,33,34,35,36,37) sdcard */
-	PINCTRL_PIN_GROUP("sdcard", mt7988_sdcard),
 	/*  @GPIO(38,39,40,41,42,43,44,45,46,47,48,49) emmc_51 */
 	PINCTRL_PIN_GROUP("emmc_51", mt7988_emmc_51),
 	/*  @GPIO(28,29) 2p5g_ext_mdio */
 	PINCTRL_PIN_GROUP("2p5g_ext_mdio", mt7988_2p5g_ext_mdio),
 	/*  @GPIO(30,31) gbe_ext_mdio */
 	PINCTRL_PIN_GROUP("gbe_ext_mdio", mt7988_gbe_ext_mdio),
-	/*  @GPIO(50,51,52,53,54) i2s */
-	PINCTRL_PIN_GROUP("i2s", mt7988_i2s),
-	/*  @GPIO(50,51,52,53) pcm */
+	/*  @GPIO(50,51,52,53,54) pcm */
 	PINCTRL_PIN_GROUP("pcm", mt7988_pcm),
 	/*  @GPIO(55,56) uart0 */
 	PINCTRL_PIN_GROUP("uart0", mt7988_uart0),
@@ -1206,18 +1203,22 @@ static const struct group_desc mt7988_groups[] = {
 	PINCTRL_PIN_GROUP("uart2_3", mt7988_uart2_3),
 	/*  @GPIO(58,59,60,61) uart1_1 */
 	PINCTRL_PIN_GROUP("uart1_1", mt7988_uart1_1),
+	/*  @GPIO(58) pwm2 */
+	PINCTRL_PIN_GROUP("pwm2", mt7988_pwm2),
+	/*  @GPIO(59) pwm3 */
+	PINCTRL_PIN_GROUP("pwm3", mt7988_pwm3),
+	/*  @GPIO(60) pwm4 */
+	PINCTRL_PIN_GROUP("pwm4", mt7988_pwm4),
+	/*  @GPIO(61) pwm5 */
+	PINCTRL_PIN_GROUP("pwm5", mt7988_pwm5),
+	/*  @GPIO(62) pwm6_0 */
+	PINCTRL_PIN_GROUP("pwm6_0", mt7988_pwm6_0),
 	/*  @GPIO(58,59,60,61) gbe_led1 */
-	PINCTRL_PIN_GROUP("gbe0_led1", mt7988_gbe0_led1),
-	PINCTRL_PIN_GROUP("gbe1_led1", mt7988_gbe1_led1),
-	PINCTRL_PIN_GROUP("gbe2_led1", mt7988_gbe2_led1),
-	PINCTRL_PIN_GROUP("gbe3_led1", mt7988_gbe3_led1),
+	PINCTRL_PIN_GROUP("gbe_led1", mt7988_gbe_led1),
 	/*  @GPIO(62) 2p5gbe_led1 */
 	PINCTRL_PIN_GROUP("2p5gbe_led1", mt7988_2p5gbe_led1),
 	/*  @GPIO(64,65,66,67) gbe_led0 */
-	PINCTRL_PIN_GROUP("gbe0_led0", mt7988_gbe0_led0),
-	PINCTRL_PIN_GROUP("gbe1_led0", mt7988_gbe1_led0),
-	PINCTRL_PIN_GROUP("gbe2_led0", mt7988_gbe2_led0),
-	PINCTRL_PIN_GROUP("gbe3_led0", mt7988_gbe3_led0),
+	PINCTRL_PIN_GROUP("gbe_led0", mt7988_gbe_led0),
 	/*  @GPIO(68) 2p5gbe_led0 */
 	PINCTRL_PIN_GROUP("2p5gbe_led0", mt7988_2p5gbe_led0),
 	/*  @GPIO(63) drv_vbus_p1 */
@@ -1228,8 +1229,8 @@ static const struct group_desc mt7988_groups[] = {
 	PINCTRL_PIN_GROUP("mdc_mdio1", mt7988_mdc_mdio1),
 	/*  @GPIO(69, 70) i2c1_2 */
 	PINCTRL_PIN_GROUP("i2c1_2", mt7988_i2c1_2),
-	/*  @GPIO(69) pwm6 */
-	PINCTRL_PIN_GROUP("pwm6", mt7988_pwm6),
+	/*  @GPIO(69) pwm6_1 */
+	PINCTRL_PIN_GROUP("pwm6_1", mt7988_pwm6_1),
 	/*  @GPIO(70) pwm7 */
 	PINCTRL_PIN_GROUP("pwm7", mt7988_pwm7),
 	/*  @GPIO(69,70) i2c2_0 */
@@ -1254,14 +1255,14 @@ static const struct group_desc mt7988_groups[] = {
 	PINCTRL_PIN_GROUP("pcie_wake_n2_1", mt7988_pcie_wake_n2_1),
 	/*  @GPIO(80,81,82,83) uart1_2 */
 	PINCTRL_PIN_GROUP("uart1_2", mt7988_uart1_2),
-	/*  @GPIO(80) pwm2 */
-	PINCTRL_PIN_GROUP("pwm2", mt7988_pwm2),
-	/*  @GPIO(81) pwm3 */
-	PINCTRL_PIN_GROUP("pwm3", mt7988_pwm3),
-	/*  @GPIO(82) pwm4 */
-	PINCTRL_PIN_GROUP("pwm4", mt7988_pwm4),
-	/*  @GPIO(83) pwm5 */
-	PINCTRL_PIN_GROUP("pwm5", mt7988_pwm5),
+	/*  @GPIO(80) pwm2_1 */
+	PINCTRL_PIN_GROUP("pwm2_1", mt7988_pwm2_1),
+	/*  @GPIO(81) pwm3_1 */
+	PINCTRL_PIN_GROUP("pwm3_1", mt7988_pwm3_1),
+	/*  @GPIO(82) pwm4_1 */
+	PINCTRL_PIN_GROUP("pwm4_1", mt7988_pwm4_1),
+	/*  @GPIO(83) pwm5_1 */
+	PINCTRL_PIN_GROUP("pwm5_1", mt7988_pwm5_1),
 	/*  @GPIO(80) net_wo0_uart_txd_0 */
 	PINCTRL_PIN_GROUP("net_wo0_uart_txd_0", mt7988_net_wo0_uart_txd_0),
 	/*  @GPIO(81) net_wo1_uart_txd_0 */
@@ -1289,7 +1290,8 @@ static const char * const mt7988_int_usxgmii_groups[] = {
 	"int_usxgmii",
 };
 static const char * const mt7988_pwm_groups[] = {
-	"pwm0", "pwm1", "pwm2", "pwm3", "pwm4",	"pwm5",	"pwm6", "pwm7"
+	"pwm7_0", "pwm1",   "pwm0", "pwm2",   "pwm3",	"pwm4",	  "pwm5",
+	"pwm6_0", "pwm6_1", "pwm7", "pwm2_1", "pwm3_1", "pwm4_1", "pwm5_1"
 };
 static const char * const mt7988_dfd_groups[] = {
 	"dfd",
@@ -1344,7 +1346,7 @@ static const char * const mt7988_wdt_groups[] = {
 static const char * const mt7988_spi_groups[] = {
 	"spi0", "spi0_wp_hold", "spi1", "spi2", "spi2_wp_hold",
 };
-static const char * const mt7988_flash_groups[] = { "emmc_45", "sdcard", "snfi",
+static const char * const mt7988_flash_groups[] = { "emmc_45", "snfi",
 						    "emmc_51" };
 static const char * const mt7988_uart_groups[] = {
 	"uart2",
@@ -1371,13 +1373,12 @@ static const char * const mt7988_uart_groups[] = {
 static const char * const mt7988_udi_groups[] = {
 	"udi",
 };
-static const char * const mt7988_audio_groups[] = {
-	"i2s", "pcm",
+static const char * const mt7988_pcm_groups[] = {
+	"pcm",
 };
 static const char * const mt7988_led_groups[] = {
-	"gbe0_led1", "gbe1_led1", "gbe2_led1", "gbe3_led1", "2p5gbe_led1",
-	"gbe0_led0", "gbe1_led0", "gbe2_led0", "gbe3_led0", "2p5gbe_led0",
-	"wf5g_led0",   "wf5g_led1",
+	"gbe_led1",    "2p5gbe_led1", "gbe_led0",
+	"2p5gbe_led0", "wf5g_led0",   "wf5g_led1",
 };
 static const char * const mt7988_usb_groups[] = {
 	"drv_vbus",
@@ -1385,7 +1386,6 @@ static const char * const mt7988_usb_groups[] = {
 };
 
 static const struct function_desc mt7988_functions[] = {
-	{ "audio", mt7988_audio_groups, ARRAY_SIZE(mt7988_audio_groups) },
 	{ "jtag", mt7988_jtag_groups, ARRAY_SIZE(mt7988_jtag_groups) },
 	{ "int_usxgmii", mt7988_int_usxgmii_groups,
 	  ARRAY_SIZE(mt7988_int_usxgmii_groups) },
@@ -1400,6 +1400,7 @@ static const struct function_desc mt7988_functions[] = {
 	{ "flash", mt7988_flash_groups, ARRAY_SIZE(mt7988_flash_groups) },
 	{ "uart", mt7988_uart_groups, ARRAY_SIZE(mt7988_uart_groups) },
 	{ "udi", mt7988_udi_groups, ARRAY_SIZE(mt7988_udi_groups) },
+	{ "pcm", mt7988_pcm_groups, ARRAY_SIZE(mt7988_pcm_groups) },
 	{ "usb", mt7988_usb_groups, ARRAY_SIZE(mt7988_usb_groups) },
 	{ "led", mt7988_led_groups, ARRAY_SIZE(mt7988_led_groups) },
 };
