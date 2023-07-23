@@ -60,7 +60,7 @@
 
 			partition@780000 {
 				label = "ubi";
-				reg = <0x780000 0x4000000>;
+				reg = <0x780000 0x7080000>;
 			};
 		};
 	};
@@ -70,6 +70,58 @@
 		compatible = "mediatek,rebb-mt7988-adie";
 		adie_id = <7976>;
 		sku_type = <3000>;
+	};
+};
+
+&i2c0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pins>;
+	status = "okay";
+
+	rt5190a_64: rt5190a@64 {
+		compatible = "richtek,rt5190a";
+		reg = <0x64>;
+		/*interrupts-extended = <&gpio26 0 IRQ_TYPE_LEVEL_LOW>;*/
+		vin2-supply = <&rt5190_buck1>;
+		vin3-supply = <&rt5190_buck1>;
+		vin4-supply = <&rt5190_buck1>;
+
+		regulators {
+			rt5190_buck1: buck1 {
+				regulator-name = "rt5190a-buck1";
+				regulator-min-microvolt = <5090000>;
+				regulator-max-microvolt = <5090000>;
+				regulator-allowed-modes =
+				<RT5190A_OPMODE_AUTO RT5190A_OPMODE_FPWM>;
+				regulator-boot-on;
+			};
+			buck2 {
+				regulator-name = "vcore";
+				regulator-min-microvolt = <600000>;
+				regulator-max-microvolt = <1400000>;
+				regulator-boot-on;
+			};
+			buck3 {
+				regulator-name = "proc";
+				regulator-min-microvolt = <600000>;
+				regulator-max-microvolt = <1400000>;
+				regulator-boot-on;
+			};
+			buck4 {
+				regulator-name = "rt5190a-buck4";
+				regulator-min-microvolt = <850000>;
+				regulator-max-microvolt = <850000>;
+				regulator-allowed-modes =
+				<RT5190A_OPMODE_AUTO RT5190A_OPMODE_FPWM>;
+				regulator-boot-on;
+			};
+			ldo {
+				regulator-name = "rt5190a-ldo";
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <1200000>;
+				regulator-boot-on;
+			};
+		};
 	};
 };
 
@@ -94,8 +146,8 @@
 		spi-cal-addr = /bits/ 32 <0x0 0x0 0x0 0x0 0x0>;
 		reg = <0>;
 		spi-max-frequency = <52000000>;
-		spi-tx-buswidth = <4>;
-		spi-rx-buswidth = <4>;
+		spi-tx-bus-width = <4>;
+		spi-rx-bus-width = <4>;
 	};
 };
 
@@ -131,6 +183,48 @@
 };
 
 &pio {
+	gbe0_led0_pins: gbe0-pins {
+		mux {
+			function = "led";
+			groups = "gbe0_led0";
+		};
+	};
+
+	gbe1_led0_pins: gbe1-pins {
+		mux {
+			function = "led";
+			groups = "gbe1_led0";
+		};
+	};
+
+	gbe2_led0_pins: gbe2-pins {
+		mux {
+			function = "led";
+			groups = "gbe2_led0";
+		};
+	};
+
+	gbe3_led0_pins: gbe3-pins {
+		mux {
+			function = "led";
+			groups = "gbe3_led0";
+		};
+	};
+
+	i2p5gbe_led0_pins: 2p5gbe-pins {
+		mux {
+			function = "led";
+			groups = "2p5gbe_led0";
+		};
+	};
+
+	i2c0_pins: i2c0-pins-g0 {
+		mux {
+			function = "i2c";
+			groups = "i2c0_1";
+		};
+	};
+
 	pcie0_pins: pcie0-pins {
 		mux {
 			function = "pcie";
@@ -173,7 +267,7 @@
 	spic_pins: spi1-pins {
 		mux {
 			function = "spi";
-			groups = "spi1_1";
+			groups = "spi1";
 		};
 	};
 };
@@ -182,20 +276,17 @@
 	status = "disabled";
 };
 
-&usxgmiisys1 {
-	internal_2500;
-};
-
 &eth {
 	status = "okay";
 
 	gmac0: mac@0 {
 		compatible = "mediatek,eth-mac";
 		reg = <0>;
+		mac-type = "xgdm";
 		phy-mode = "10gbase-kr";
 
 		fixed-link {
-			speed = <2500>;
+			speed = <10000>;
 			full-duplex;
 			pause;
 		};
@@ -204,14 +295,16 @@
 	gmac1: mac@1 {
 		compatible = "mediatek,eth-mac";
 		reg = <1>;
-		phy-mode = "10gbase-kr";
+		mac-type = "xgdm";
+		phy-mode = "xgmii";
 		phy-handle = <&phy0>;
 	};
 
 	gmac2: mac@2 {
 		compatible = "mediatek,eth-mac";
 		reg = <2>;
-		phy-mode = "10gbase-kr";
+		mac-type = "xgdm";
+		phy-mode = "usxgmii";
 		phy-handle = <&phy1>;
 	};
 
@@ -219,14 +312,20 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 		phy0: ethernet-phy@0 {
+			pinctrl-names = "i2p5gbe-led";
+			pinctrl-0 = <&i2p5gbe_led0_pins>;
 			reg = <15>;
 			compatible = "ethernet-phy-ieee802.3-c45";
-			phy-mode = "10gbase-kr";
+			phy-mode = "xgmii";
 		};
 
 		phy1: ethernet-phy@8 {
 			reg = <8>;
 			compatible = "ethernet-phy-ieee802.3-c45";
+			reset-gpios = <&pio 71 1>;
+			reset-assert-us = <100000>;
+			reset-deassert-us = <221000>;
+			mdi-reversal = /bits/ 16 <1>;
 		};
 
 		switch@0 {
@@ -239,21 +338,29 @@
 				port@0 {
 					reg = <0>;
 					label = "lan0";
+					phy-mode = "gmii";
+					phy-handle = <&sphy0>;
 				};
 
 				port@1 {
 					reg = <1>;
 					label = "lan1";
+					phy-mode = "gmii";
+					phy-handle = <&sphy1>;
 				};
 
 				port@2 {
 					reg = <2>;
 					label = "lan2";
+					phy-mode = "gmii";
+					phy-handle = <&sphy2>;
 				};
 
 				port@3 {
 					reg = <3>;
 					label = "lan3";
+					phy-mode = "gmii";
+					phy-handle = <&sphy3>;
 				};
 
 				port@6 {
@@ -267,6 +374,48 @@
 						full-duplex;
 						pause;
 					};
+				};
+			};
+
+			mdio {
+				compatible = "mediatek,dsa-slave-mdio";
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				sphy0: switch_phy0@0 {
+					compatible = "ethernet-phy-id03a2.9481";
+					reg = <0>;
+					pinctrl-names = "gbe-led";
+					pinctrl-0 = <&gbe0_led0_pins>;
+					nvmem-cells = <&phy_calibration_p0>;
+					nvmem-cell-names = "phy-cal-data";
+				};
+
+				sphy1: switch_phy1@1 {
+					compatible = "ethernet-phy-id03a2.9481";
+					reg = <1>;
+					pinctrl-names = "gbe-led";
+					pinctrl-0 = <&gbe1_led0_pins>;
+					nvmem-cells = <&phy_calibration_p1>;
+					nvmem-cell-names = "phy-cal-data";
+				};
+
+				sphy2: switch_phy2@2 {
+					compatible = "ethernet-phy-id03a2.9481";
+					reg = <2>;
+					pinctrl-names = "gbe-led";
+					pinctrl-0 = <&gbe2_led0_pins>;
+					nvmem-cells = <&phy_calibration_p2>;
+					nvmem-cell-names = "phy-cal-data";
+				};
+
+				sphy3: switch_phy3@3 {
+					compatible = "ethernet-phy-id03a2.9481";
+					reg = <3>;
+					pinctrl-names = "gbe-led";
+					pinctrl-0 = <&gbe3_led0_pins>;
+					nvmem-cells = <&phy_calibration_p3>;
+					nvmem-cell-names = "phy-cal-data";
 				};
 			};
 		};

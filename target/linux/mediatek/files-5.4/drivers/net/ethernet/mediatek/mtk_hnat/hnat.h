@@ -18,6 +18,7 @@
 #include <net/netevent.h>
 #include <linux/mod_devicetable.h>
 #include "hnat_mcast.h"
+#include "nf_hnat_mtk.h"
 
 /*--------------------------------------------------------------------------*/
 /* Register Offset*/
@@ -801,9 +802,9 @@ struct foe_entry {
 /* If user wants to change default FOE entry number, both DEF_ETRY_NUM and
  * DEF_ETRY_NUM_CFG need to be modified.
  */
-#define DEF_ETRY_NUM		16384
+#define DEF_ETRY_NUM		8192
 /* feasible values : 32768, 16384, 8192, 4096, 2048, 1024 */
-#define DEF_ETRY_NUM_CFG	TABLE_16K
+#define DEF_ETRY_NUM_CFG	TABLE_8K
 /* corresponding values : TABLE_32K, TABLE_16K, TABLE_8K, TABLE_4K, TABLE_2K,
  * TABLE_1K
  */
@@ -849,6 +850,18 @@ struct mtk_hnat_data {
 	enum mtk_hnat_version version;
 };
 
+struct map46 {
+	u32 ipv4;
+	struct in6_addr ipv6;
+	struct list_head list;
+};
+
+struct xlat_conf {
+	struct list_head map_list;
+	struct in6_addr prefix;
+	int prefix_len;
+};
+
 struct mtk_hnat {
 	struct device *dev;
 	void __iomem *fe_base;
@@ -890,8 +903,7 @@ struct mtk_hnat {
 	struct timer_list hnat_reset_timestamp_timer;
 	struct timer_list hnat_mcast_check_timer;
 	bool nf_stat_en;
-	bool ipv6_en;
- 	bool guest_en;
+	struct xlat_conf xlat;
 };
 
 struct extdev_entry {
@@ -953,6 +965,7 @@ enum FoeIpAct {
 #define BIT_IPV6_3T_ROUTE_EN BIT(8)
 #define BIT_IPV6_5T_ROUTE_EN BIT(9)
 #define BIT_IPV6_6RD_EN BIT(10)
+#define BIT_IPV6_464XLAT_EN BIT(11)
 #define BIT_IPV4_NAT_EN BIT(12)
 #define BIT_IPV4_NAPT_EN BIT(13)
 #define BIT_IPV4_DSL_EN BIT(14)
@@ -1154,6 +1167,7 @@ enum FoeIpAct {
 
 #define UDF_PINGPONG_IFIDX GENMASK(3, 0)
 #define UDF_HNAT_PRE_FILLED BIT(4)
+
 extern const struct of_device_id of_hnat_match[];
 extern struct mtk_hnat *hnat_priv;
 
@@ -1168,6 +1182,7 @@ static inline int is_hnat_pre_filled(struct foe_entry *entry)
 
 	return !!(udf & UDF_HNAT_PRE_FILLED);
 }
+
 #if defined(CONFIG_NET_DSA_MT7530)
 u32 hnat_dsa_fill_stag(const struct net_device *netdev,
 		       struct foe_entry *entry,
@@ -1202,6 +1217,8 @@ int mtk_hqos_ptype_cb(struct sk_buff *skb, struct net_device *dev,
 		      struct packet_type *pt, struct net_device *unused);
 extern int dbg_cpu_reason;
 extern int debug_level;
+extern int xlat_toggle;
+extern struct hnat_desc headroom[DEF_ETRY_NUM];
 extern int qos_dl_toggle;
 extern int qos_ul_toggle;
 extern int hook_toggle;
@@ -1230,6 +1247,10 @@ int entry_detail(u32 ppe_id, int index);
 int entry_delete_by_mac(u8 *mac);
 int entry_delete(u32 ppe_id, int index);
 int hnat_warm_init(void);
+u32 hnat_get_ppe_hash(struct foe_entry *entry);
+int mtk_ppe_get_xlat_v4_by_v6(struct in6_addr *ipv6, u32 *ipv4);
+int mtk_ppe_get_xlat_v6_by_v4(u32 *ipv4, struct in6_addr *ipv6,
+			      struct in6_addr *prefix);
 
 struct hnat_accounting *hnat_get_count(struct mtk_hnat *h, u32 ppe_id,
 				       u32 index, struct hnat_accounting *diff);

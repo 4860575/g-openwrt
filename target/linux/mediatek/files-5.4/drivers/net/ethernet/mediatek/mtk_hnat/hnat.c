@@ -144,24 +144,31 @@ void set_gmac_ppe_fwd(int id, int enable)
 		 (id == NR_GMAC2_PORT) ? GDMA2_FWD_CFG : GDMA3_FWD_CFG);
 
 	if (enable) {
+#if defined(CONFIG_MEDIATEK_NETSYS_V2) || defined(CONFIG_MEDIATEK_NETSYS_V3)
 		if (CFG_PPE_NUM == 3 && id == NR_GMAC3_PORT)
 			cr_set_bits(reg, BITS_GDM_ALL_FRC_P_PPE2);
 		else if (CFG_PPE_NUM == 3 && id == NR_GMAC2_PORT)
 			cr_set_bits(reg, BITS_GDM_ALL_FRC_P_PPE1);
-		else
-			cr_set_bits(reg, BITS_GDM_ALL_FRC_P_PPE);
+#endif
+		cr_set_bits(reg, BITS_GDM_ALL_FRC_P_PPE);
 
 		return;
 	}
 
 	/*disabled */
 	val = readl(reg);
-	if ((val & GDM_ALL_FRC_MASK) == BITS_GDM_ALL_FRC_P_PPE ||
-	    (CFG_PPE_NUM == 3 &&
+#if defined(CONFIG_MEDIATEK_NETSYS_V2) || defined(CONFIG_MEDIATEK_NETSYS_V3)
+	if ((CFG_PPE_NUM == 3 &&
 	    ((val & GDM_ALL_FRC_MASK) == BITS_GDM_ALL_FRC_P_PPE1 ||
 	     (val & GDM_ALL_FRC_MASK) == BITS_GDM_ALL_FRC_P_PPE2)))
 		cr_set_field(reg, GDM_ALL_FRC_MASK,
 			     BITS_GDM_ALL_FRC_P_CPU_PDMA);
+#endif
+
+	if ((val & GDM_ALL_FRC_MASK) == BITS_GDM_ALL_FRC_P_PPE)
+		cr_set_field(reg, GDM_ALL_FRC_MASK,
+				 BITS_GDM_ALL_FRC_P_CPU_PDMA);
+
 }
 
 static int entry_mac_cmp(struct foe_entry *entry, u8 *mac)
@@ -675,8 +682,9 @@ int hnat_warm_init(void)
 		hnat_hw_init(ppe_id);
 	}
 
-	set_gmac_ppe_fwd(0, 1);
-	set_gmac_ppe_fwd(1, 1);
+	set_gmac_ppe_fwd(NR_GMAC1_PORT, 1);
+	set_gmac_ppe_fwd(NR_GMAC2_PORT, 1);
+	set_gmac_ppe_fwd(NR_GMAC3_PORT, 1);
 	register_netevent_notifier(&nf_hnat_netevent_nb);
 
 	return 0;
@@ -791,8 +799,7 @@ static int hnat_probe(struct platform_device *pdev)
 #else
 	hnat_priv->ppe_base[0] = hnat_priv->fe_base + 0xe00;
 #endif
-	hnat_priv->ipv6_en = true; /* enable ipv6 by default */
-	hnat_priv->guest_en = true;
+
 	err = hnat_init_debugfs(hnat_priv);
 	if (err)
 		return err;
@@ -854,6 +861,8 @@ static int hnat_probe(struct platform_device *pdev)
 	err = hnat_roaming_enable();
 	if (err)
 		pr_info("hnat roaming work fail\n");
+
+	INIT_LIST_HEAD(&hnat_priv->xlat.map_list);
 
 	return 0;
 
