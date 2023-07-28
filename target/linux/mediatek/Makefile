@@ -16,6 +16,5 @@ DEFAULT_PACKAGES += \
 	kmod-leds-gpio kmod-gpio-button-hotplug \
 	autocore-arm mtkiappd uboot-envtools iptables-mod-ipopt luci-app-mtk l1profile wireless-tools \
 	kmod-conninfra kmod-warp kmod-mt_wifi ipv6helper kmod-mediatek_hnat bash autocore-arm \
-	mtkhnat_util  wifi-profile swconfig luci-app-turboacc-mtk
-
+	mtkhnat_util  wifi-profile swconfig
 $(eval $(call BuildTarget))
