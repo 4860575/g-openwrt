@@ -45,11 +45,7 @@ DEFAULT_PACKAGES.nas:=\
 DEFAULT_PACKAGES.router:=\
 	dnsmasq-full \
 	firewall \
-	ip6tables \
 	iptables \
-	kmod-ipt-offload \
-	odhcp6c \
-	odhcpd-ipv6only \
 	ppp \
 	ppp-mod-pppoe
 # For easy usage
@@ -59,6 +55,8 @@ DEFAULT_PACKAGES.tweak:=\
 	kmod-nf-nathelper \
 	kmod-nf-nathelper-extra \
 	luci \
+	luci-app-turboacc \
+	luci-compat \
 	luci-lib-base \
 	luci-lib-fs \
 	luci-lib-ipkg
