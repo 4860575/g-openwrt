@@ -1,4 +1,4 @@
 src-git packages https://github.com/4860575/g-packages.git^48640a41601f0bddb4700fd1566fa92426686e6c
 src-git luci https://github.com/4860575/g-luci.git^987d9704d192ad80f3e0086b5b75845f00ba5417
 src-git routing https://git.openwrt.org/feed/routing.git^8071852b4556a02533cacb7a0f6a432df3507302
-src-git gavin https://github.com/4860575/gavin.git,21.02-mt7981
+src-git gavin https://github.com/4860575/gavin.git;21.02-mt7981
