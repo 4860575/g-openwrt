@@ -91,7 +91,7 @@ Commit-Queue: Yu Zhao <yuzhao@chromium.org>
  		return 1;
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -924,6 +924,8 @@ vm_fault_t finish_mkwrite_fault(struct v
+@@ -926,6 +926,8 @@ vm_fault_t finish_mkwrite_fault(struct v
  #define ZONES_PGOFF		(NODES_PGOFF - ZONES_WIDTH)
  #define LAST_CPUPID_PGOFF	(ZONES_PGOFF - LAST_CPUPID_WIDTH)
  #define KASAN_TAG_PGOFF		(LAST_CPUPID_PGOFF - KASAN_TAG_WIDTH)
@@ -570,7 +570,7 @@ Commit-Queue: Yu Zhao <yuzhao@chromium.org>
  #if defined(CONFIG_NUMA_BALANCING) && !defined(LAST_CPUPID_NOT_IN_PAGE_FLAGS)
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -2697,6 +2697,8 @@ SYSCALL_DEFINE1(swapoff, const char __us
+@@ -2703,6 +2703,8 @@ SYSCALL_DEFINE1(swapoff, const char __us
  	err = 0;
  	atomic_inc(&proc_poll_event);
  	wake_up_interruptible(&proc_poll_wait);
@@ -579,7 +579,7 @@ Commit-Queue: Yu Zhao <yuzhao@chromium.org>
  
  out_dput:
  	filp_close(victim, NULL);
-@@ -3323,6 +3325,8 @@ SYSCALL_DEFINE2(swapon, const char __use
+@@ -3329,6 +3331,8 @@ SYSCALL_DEFINE2(swapon, const char __use
  	mutex_unlock(&swapon_mutex);
  	atomic_inc(&proc_poll_event);
  	wake_up_interruptible(&proc_poll_wait);
