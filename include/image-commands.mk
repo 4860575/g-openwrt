@@ -202,8 +202,9 @@ define Build/fit
 		$(if $(word 2,$(1)),-d $(word 2,$(1))) -C $(word 1,$(1)) \
 		-a $(KERNEL_LOADADDR) -e $(if $(KERNEL_ENTRY),$(KERNEL_ENTRY),$(KERNEL_LOADADDR)) \
 		$(if $(DEVICE_FDT_NUM),-n $(DEVICE_FDT_NUM)) \
-		-c $(if $(DEVICE_DTS_CONFIG),$(DEVICE_DTS_CONFIG),"config@1") \
-		-A $(LINUX_KARCH) -v $(LINUX_VERSION)
+		-c $(if $(DEVICE_DTS_CONFIG),$(DEVICE_DTS_CONFIG),"config-1") \
+		-A $(LINUX_KARCH) -v $(LINUX_VERSION) \
+		$(if $(CONFIG_TARGET_ROOTFS_SQUASHFS),-R $(ROOTFS/squashfs/$(DEVICE_NAME)))
 	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage -f $@.its $@.new
 	@mv $@.new $@
 endef
@@ -328,7 +329,7 @@ define Build/patch-cmdline
 endef
 
 # Convert a raw image into a $1 type image.
-# E.g. | qemu-image vdi
+# E.g. | qemu-image vdi <optional extra arguments to qemu-img binary>
 define Build/qemu-image
 	if command -v qemu-img; then \
 		qemu-img convert -f raw -O $1 $@ $@.new; \
@@ -336,6 +337,13 @@ define Build/qemu-image
 	else \
 		echo "WARNING: Install qemu-img to create VDI/VMDK images" >&2; exit 1; \
 	fi
+endef
+
+define Build/qsdk-ipq-factory-mmc
+	$(TOPDIR)/scripts/mkits-qsdk-ipq-image.sh \
+		$@.its kernel $(IMAGE_KERNEL) rootfs $(IMAGE_ROOTFS)
+	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage -f $@.its $@.new
+	@mv $@.new $@
 endef
 
 define Build/qsdk-ipq-factory-nand
