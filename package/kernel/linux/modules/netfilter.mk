@@ -457,7 +457,6 @@ endef
 
 $(eval $(call KernelPackage,ipt-nat))
 
-
 define KernelPackage/ipt-raw
   TITLE:=Netfilter IPv4 raw table support
   KCONFIG:=CONFIG_IP_NF_RAW
