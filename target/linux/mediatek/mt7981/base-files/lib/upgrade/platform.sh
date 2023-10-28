@@ -193,23 +193,15 @@ platform_do_upgrade() {
 	*mt2500* |\
 	*zr-3020* |\
 	*360,t7* |\
-	*abt,asr3000* |\
 	*cetron,ct3003* |\
 	*clt,r30b1* |\
 	*imou,lc-hx3001* |\
 	*jcg,q30* |\
-	nradio,wt9103 |\
-	cmcc,a10 |\
 	cmcc,rax3000m |\
 	h3c,nx30pro |\
 	*konka,komi-a31* |\
 	*snand*)
 		nand_do_upgrade "$1"
-		;;
-	cmcc,rax3000m-emmc)
-		CI_KERNPART="kernel"
-		CI_ROOTPART="rootfs"
-		emmc_do_upgrade "$1"
 		;;
 	*emmc*)
 		mtk_mmc_do_upgrade "$1"
@@ -240,16 +232,13 @@ platform_check_image() {
 	*360,t7* |\
 	xiaomi,mi-router-wr30u-stock|\
 	xiaomi,mi-router-wr30u-112m|\
-	*abt,asr3000* |\
 	*cetron,ct3003* |\
 	*clt,r30b1* |\
 	*imou,lc-hx3001* |\
 	*jcg,q30* |\
-	cmcc,a10 |\
-	cmcc,rax3000m* |\
+	cmcc,rax3000m |\
 	h3c,nx30pro |\
 	*konka,komi-a31* |\
-	nradio,wt9103 |\
 	*snand* |\
 	*emmc*)
 		# tar magic `ustar`
