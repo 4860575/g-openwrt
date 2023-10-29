@@ -11,6 +11,11 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
+abt,asr3000)
+	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth1"
+	ucidef_set_led_netdev "wlan2g" "WLAN2G" "green:wlan2g" "ra0"
+	ucidef_set_led_netdev "wlan5g" "WLAN5G" "green:wlan5g" "rax0"
+	;;
 clt,r30b1)
 	ucidef_set_led_default "green" "GREEN" "r30b1:green" "1"
 	ucidef_set_led_default "red" "RED" "r30b1:red" "0"
@@ -39,6 +44,12 @@ h3c,nx30pro)
 	;;
 konka,komi-a31)
         ucidef_set_led_netdev "blue" "BLUE" "blue:status" "eth1" "link"
+	;;
+nradio,wt9103)
+	ucidef_set_led_default "power" "POWER" "hc:blue:status" "1"
+	ucidef_set_led_netdev "wifi" "WIFI" "hc:blue:wifi" "rax0" "link"
+	ucidef_set_led_netdev "5g" "5G" "hc:blue:cmode5" "eth1" "tx rx"
+	ucidef_set_led_netdev "lan" "LAN" "hc:blue:cmode4" "br-lan" "tx rx"
 	;;
 esac
 
