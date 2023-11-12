@@ -385,3 +385,36 @@ define Device/xiaomi_redmi-router-ax6000-stock
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
 TARGET_DEVICES += xiaomi_redmi-router-ax6000-stock
+
+define Device/BPI-R3MINI-NAND
+  DEVICE_VENDOR := Banana Pi
+  DEVICE_MODEL := Banana Pi R3MINI
+  DEVICE_TITLE := MTK7986a BPI R3MINI NAND
+  DEVICE_DTS := mt7986a-bananapi-bpi-r3mini-nand
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  DEVICE_PACKAGES := kmod-phy-air-en8811h bpir3_mini-properties
+  SUPPORTED_DEVICES := bananapi,bpi-r3mini
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 65536k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += BPI-R3MINI-NAND
+
+define Device/BPI-R3MINI-EMMC
+  DEVICE_VENDOR := Banana Pi
+  DEVICE_MODEL := Banana Pi R3MINI
+  DEVICE_TITLE := MTK7986a BPI R3MINI EMMC
+  DEVICE_DTS := mt7986a-bananapi-bpi-r3mini-emmc
+  DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+  DEVICE_PACKAGES := kmod-phy-air-en8811h bpir3_mini-properties \
+  	automount blkid blockdev f2fsck fdisk losetup mkf2fs f2fs-tools \
+        kmod-fs-f2fs kmod-mmc kmod-nls-cp437 kmod-nls-iso8859-1
+  SUPPORTED_DEVICES := bananapi,bpi-r3mini-emmc
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += BPI-R3MINI-EMMC
