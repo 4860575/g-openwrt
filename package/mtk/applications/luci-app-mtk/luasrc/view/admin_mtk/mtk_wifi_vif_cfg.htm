@@ -481,13 +481,6 @@ function hi(to, devname, vifname)
                     </td>
                 </tr>
                 <tr>
-                    <tr>
-                        <td><%:802.11r FT%></td>
-                        <td>
-                            <input type="radio" name="__ftsupport" value="1" <% if vif.__ftsupport == "1" then %> checked="checked"<% end %>/><%:Enable%>
-                            <input type="radio" name="__ftsupport" value="0" <% if vif.__ftsupport == "0" then %> checked="checked"<% end %>/><%:Disable%>
-                        </td>
-                    </tr>
                     <td><%:APSD Capable%></td>
                     <td>
                         <input type="radio" name="__apsd_capable" value="1" <% if vif.__apsd_capable == "1" then %> checked="checked"<% end %>/><%:Enable%>
@@ -504,6 +497,18 @@ function hi(to, devname, vifname)
                     <td><%:RTS Threshold%> (1-2347)</td>
                     <td>
                         <input name="__rts_threshold" id="RTSThreshold" value="<%=vif.__rts_threshold or 2347%>" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><%:Kick STA Threshold%> (-100-0)</td>
+                    <td>
+                        <input name="__kickrssi" id="KickStaRssiLow" value="<%=vif.__kickrssi or 0%>" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><%:STA Assoc Threshold%> (-100-0)</td>
+                    <td>
+                        <input name="__assocthres" id="AssocReqRssiThres" value="<%=vif.__assocthres or 0%>" />
                     </td>
                 </tr>
                 <tr>
@@ -1228,6 +1233,20 @@ function hi(to, devname, vifname)
             alert("RTS Threshold is incorrect!\nPlease enter an integer number between 1 to 2347 inclusive.");
             document.getElementById("RTSThreshold").focus();
             document.getElementById("RTSThreshold").select();
+            return false;
+        }
+        tmpVal = document.getElementById("KickStaRssiLow").value;
+        if(isNaN(tmpVal) || parseInt(tmpVal) < -100 || parseInt(tmpVal) > 0){
+            alert("Kick STA Threshold is incorrect!\nPlease enter an integer number between -100 to 0 inclusive.");
+            document.getElementById("KickStaRssiLow").focus();
+            document.getElementById("KickStaRssiLow").select();
+            return false;
+        }
+        tmpVal = document.getElementById("AssocReqRssiThres").value;
+        if(isNaN(tmpVal) || parseInt(tmpVal) < -100 || parseInt(tmpVal) > 0){
+            alert("STA Assoc Threshold is incorrect!\nPlease enter an integer number between -100 to 0 inclusive.");
+            document.getElementById("AssocReqRssiThres").focus();
+            document.getElementById("AssocReqRssiThres").select();
             return false;
         }
 
