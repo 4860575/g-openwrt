@@ -501,6 +501,20 @@ function mtwifi_cfg_setup(argv)
         dats.ITxBfEn = 0
     end
 
+    local WirelessMode
+    if cfg.config.band == "2g" then
+        if string.sub(cfg.config.htmode,1,2) == "HE" then
+            WirelessMode = 16 -- PHY_11AX_24G
+        else
+            WirelessMode = 9 -- PHY_11BGN_MIXED
+        end
+    elseif cfg.config.band == "5g" then
+        if string.sub(cfg.config.htmode,1,2) == "HE" then
+            WirelessMode = 17 -- PHY_11AX_5G
+        else
+            WirelessMode = 15 -- PHY_11VHT_N_MIXED
+        end
+        
     if ax_feature and cfg.config.twt then
         dats.TWTSupport = cfg.config.twt
     else
