@@ -27,15 +27,14 @@ CPU_RPS_ADD()
 MT7986_whnat()
 {
 	num_of_wifi=$1
-	is_usbnet=$2
+	storage=$2
 	DEFAULT_RPS=0
 
 	#Physical IRQ# setting
 	PCIe0=
 	eth_tx=229
 	eth_rx0=230
-	usb=133
- 	usb1=205
+	usb=205
 	if [ -d "/proc/warp_ctrl/warp0" ]; then
 	wifi1_irq=237
 	wifi2_irq=237
@@ -53,7 +52,7 @@ MT7986_whnat()
 	if [ "$num_of_wifi" = "0" ]; then
 		CPU0_AFFINITY="$eth_rx0"
 		CPU1_AFFINITY="$eth_tx"
-		CPU2_AFFINITY="$usb $usb1"
+		CPU2_AFFINITY="$usb"
 		CPU3_AFFINITY=""
 
 		CPU0_RPS=""
@@ -63,7 +62,7 @@ MT7986_whnat()
 	elif [ "$num_of_wifi" = "1" ]; then
 		CPU0_AFFINITY="$eth_rx0"
 		CPU1_AFFINITY="$eth_tx"
-		CPU2_AFFINITY="$usb $usb1"
+		CPU2_AFFINITY="$usb"
 		CPU3_AFFINITY="$wifi1_irq"
 
 		CPU0_RPS="                $wifi1 $wifi1_apcli0"
@@ -73,18 +72,17 @@ MT7986_whnat()
 	elif [ "$num_of_wifi" = "2" ]; then
 		CPU0_AFFINITY="$eth_rx0"
 		CPU1_AFFINITY="$eth_tx"
-		CPU2_AFFINITY="$usb $usb1"
+		CPU2_AFFINITY="$usb"
 		CPU3_AFFINITY="$wifi1_irq $wifi2_irq"
 
 		CPU0_RPS="                $wifi1 $wifi2 $wifi1_apcli0 $wifi2_apcli0"
-  		[ "$is_usbnet" = "1" ] && CPU0_RPS="$wifi1_apcli0 $wifi2_apcli0"
 		CPU1_RPS="$ethif1 $ethif2 $wifi1 $wifi2 $wifi1_apcli0 $wifi2_apcli0"
 		CPU2_RPS="$ethif1 $ethif2 $wifi1 $wifi2 $wifi1_apcli0 $wifi2_apcli0"
 		CPU3_RPS="$ethif1 $ethif2"
 	elif [ "$num_of_wifi" = "3" ]; then
 		CPU0_AFFINITY="$eth_tx $eth_rx0"
 		CPU1_AFFINITY="$wifi1_irq $wifi2_irq"
-		CPU2_AFFINITY="$PCIe0 $wifi3_irq $usb $usb1"
+		CPU2_AFFINITY="$PCIe0 $wifi3_irq $usb"
 		CPU3_AFFINITY=""
 
 		CPU0_RPS=""
@@ -678,7 +676,7 @@ scan_usbnet()
 		[ -d "$dev" ] || continue
 		dev_name=$(basename $dev)
 		dev_prefix="${dev_name%%[0-9]*}"
-		if [ "$dev_prefix" = "usb" ] || [ "$dev_prefix" = "wwan" ] || [ "$dev_prefix" = "rmnet" ] || [ "$dev_prefix" = "eth2" ] || [ "$dev_prefix" = "eth3" ] || [ "$dev_prefix" = "eth4" ] || [ "$dev_prefix" = "eth5" ]; then
+		if [ "$dev_prefix" = "usb" ] || [ "$dev_prefix" = "wwan" ]; then
 			IS_USBNET=1
 			return
 		fi
@@ -739,6 +737,7 @@ setup_model()
 	bananapi,bpi-r3mini* |\
 	netcore,n60 |\
 	glinet,gl-mt6000|\
+	ruijie,rg-x60-pro |\
 	jdcloud,re-cp-03 |\
 	tplink,tl-xdr608* |\
 	*7986*)
@@ -758,7 +757,6 @@ setup_model()
 	*rax3000m* |\
 	h3c,nx30pro |\
 	konka,komi-a31 |\
-	*nokia,ea0326gmp* |\
 	nradio,wt9103 |\
 	*7981*)
 		MT7981_whnat $num_of_wifi $usbnet
