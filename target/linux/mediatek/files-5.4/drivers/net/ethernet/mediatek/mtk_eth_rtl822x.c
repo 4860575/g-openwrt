@@ -158,7 +158,7 @@ static int rtl822x_init(struct mtk_eth *eth, int addr)
 	val |= (1 << 9);
 	mtk_mmd_write(eth, addr, 7, 0, val);
 
-    msleep(500);
+    	msleep(500);
 
 	// led0 at 10/100/1000/2.5G
 	mtk_mmd_write(eth, addr, 31, 0xd032, 0x0027);
@@ -168,7 +168,7 @@ static int rtl822x_init(struct mtk_eth *eth, int addr)
 	mtk_mmd_write(eth, addr, 31, 0xd044, 0xf8);
 
 	msleep(500);
-    	
+	
 	dev_info(eth->dev, "RTL822x init success!\n");
 
 	Rtl8226b_phy_init((HANDLE){eth, addr}, NULL, 1);
