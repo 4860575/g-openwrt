@@ -964,6 +964,7 @@ return view.extend({
  					o = ss.taboption('general', CBIWifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
  					o.ucisection = s.section;
  				}
+ 				
 				if (hwtype == 'mac80211') {
 					o = ss.taboption('general', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'), _('Legacy or badly behaving devices may require legacy 802.11b rates to interoperate. Airtime efficiency may be significantly reduced where these are used. It is recommended to not allow 802.11b rates where possible.'));
 					o.depends({'_freq': '2g', '!contains': true});
@@ -1009,9 +1010,8 @@ return view.extend({
 				else if (hwtype == 'mtwifi') {
 					o = ss.taboption('advanced', CBIWifiCountryValue, 'country', _('Country Code'));
 					o.wifiNetwork = radioNet;
-
 					if (band == '2g') {
- 						o = ss.taboption('advanced', form.Flag, 'noscan', _('Force 40MHz mode'), _('Always use 40MHz channels even if the secondary channel overlaps. Using this option does not comply with IEEE 802.11n-2009!'));
+						o = ss.taboption('advanced', form.Flag, 'noscan', _('Force 40MHz mode'), _('Always use 40MHz channels even if the secondary channel overlaps. Using this option does not comply with IEEE 802.11n-2009!'));
  						o.rmempty = false;
  					}
 
@@ -1422,8 +1422,8 @@ return view.extend({
 				o.depends('encryption', 'wpa-mixed');
 				o.depends('encryption', 'psk-mixed');
 				if (hwtype != 'mtwifi') {
- 					o.depends('encryption', 'psk');
- 				}
+					o.depends('encryption', 'psk');
+				}
 				o.value('auto', _('auto'));
 				o.value('ccmp', _('Force CCMP (AES)'));
 				o.value('tkip', _('Force TKIP'));
@@ -2007,8 +2007,9 @@ return view.extend({
 
 		s.handleRemove = function(section_id, radioNet, ev) {
 			var radioName = radioNet.getWifiDeviceName();
-			var hwtype = uci.get('wireless', radioName, 'type');
 			var ifmode = radioNet.getMode();
+			var hwtype = uci.get('wireless', radioName, 'type');
+
 			if (hwtype == 'mtwifi' && ifmode == 'ap')
 			{
 				var wifi_sections = uci.sections('wireless', 'wifi-iface');
@@ -2033,7 +2034,6 @@ return view.extend({
 			document.querySelector('.cbi-section-table-row[data-sid="%s"]'.format(section_id)).style.opacity = 0.5;
 			return form.TypedSection.prototype.handleRemove.apply(this, [section_id, ev]);
 		};
-
 
 		s.handleScan = function(radioDev, ev) {
 			var table = E('table', { 'class': 'table' }, [
