@@ -1056,11 +1056,6 @@ return view.extend({
  						
  						o = ss.taboption('advanced', form.Flag, 'bandsteering', _('Band Steering'));
  						o.default = o.disabled;
- 						
-						o = ss.taboption('advanced', form.Value, 'dtim_period', _('DTIM Interval'), _('Delivery Traffic Indication Message Interval'));
-						o.optional = true;
-						o.placeholder = 1;
-						o.datatype = 'range(1,255)';
 	
 						o = ss.taboption('advanced', form.Value, 'beacon_int', _('Beacon Interval'));
 						o.optional = true;
@@ -1377,6 +1372,12 @@ return view.extend({
 					o.datatype = 'uinteger';
 					o.depends('mode', 'ap');
 					o.placeholder = 2347;
+
+					o = ss.taboption('advanced', form.Value, 'dtim_period', _('DTIM Interval'), _('Delivery Traffic Indication Message Interval'));
+					o.optional = true;
+					o.placeholder = 1;
+					o.datatype = 'range(1,255)';
+					o.depends('mode', 'ap');
 
 					o = ss.taboption('advanced', form.Flag, 'mumimo_dl', _('MU-MIMO DL'));
 					o.depends('mode', 'ap');
