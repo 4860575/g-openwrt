@@ -31,7 +31,7 @@
 3. 下载 dl 库，编译固件
 
 ```bash
-git clone --depth=1 -b 21.02-mtk7981 https://github.com/4860575/g-openwrt.git
+git clone -b 21.02-mtk7981 --single-branch --filter=blob:none https://github.com/4860575/g-openwrt.git
 cd g-openwrt
 git pull
 ./scripts/feeds update -a
