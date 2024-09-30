@@ -157,7 +157,7 @@ function vif_count(cfg)
         if v.config.mode == "ap" then
             ap_num = ap_num + 1
         elseif v.config.mode == "sta" then
-            apcli_num = apcli_num +1
+            apcli_num = apcli_num + 1
         end
     end
 
