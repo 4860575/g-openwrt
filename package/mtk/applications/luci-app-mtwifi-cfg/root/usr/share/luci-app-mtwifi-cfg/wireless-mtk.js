@@ -1380,11 +1380,11 @@ return view.extend({
 
 					o = ss.taboption('advanced', form.Flag, 'mumimo_dl', _('MU-MIMO DL'));
 					o.depends('mode', 'ap');
-					o.default = o.disabled;
+					o.default = o.enabled;
 
 					o = ss.taboption('advanced', form.Flag, 'mumimo_ul', _('MU-MIMO UL'));
 					o.depends('mode', 'ap');
-					o.default = o.disabled;
+					o.default = o.enabled;
 
 					o = ss.taboption('advanced', form.Flag, 'ofdma_dl', _('OFDMA DL'));
 					o.depends('mode', 'ap');
@@ -2032,10 +2032,9 @@ return view.extend({
 
 		s.handleRemove = function(section_id, radioNet, ev) {
 			var radioName = radioNet.getWifiDeviceName();
-			var ifmode = radioNet.getMode();
 			var hwtype = uci.get('wireless', radioName, 'type');
 
-			if (hwtype == 'mtwifi' && ifmode == 'ap')
+			if (hwtype == 'mtwifi')
 			{
 				var wifi_sections = uci.sections('wireless', 'wifi-iface');
 				var mbssid_num = 0;
