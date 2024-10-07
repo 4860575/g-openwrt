@@ -9,7 +9,7 @@ include $(INCLUDE_DIR)/kernel.mk
 PKG_NAME:=mt_wifi
 
 MT7981_FW_DIR := mt7981-fw-20230306
-MT7986_FW_DIR := mt7986-fw-20230421
+MT7986_FW_DIR := mt7986-fw-20230808
 
 ifeq ($(CONFIG_MTK_CHIP_MT7981),y)
 PKG_SUFFIX:=mt7981
@@ -339,13 +339,17 @@ if [ "$$(CONFIG_MTK_WIFI_FW_BIN_LOAD)" = "y" ]; then \
 			$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7986/rebb/MT7986_iPAiLNA_EEPROM_AX6000.bin $(PKG_BUILD_DIR)/bin/mt7986/rebb/MT7986_ePAeLNA_EEPROM_AX6000.bin \
 			$(1)/lib/firmware/; \
 		fi; \
+		if [ "$$(CONFIG_MTK_WIFI_SKU_TYPE)" = "AX7800" ] ; then \
+			$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7986/rebb/MT7986_iPAiLNA_EEPROM_AX7800.bin $(PKG_BUILD_DIR)/bin/mt7986/rebb/MT7986_ePAeLNA_EEPROM_AX7800.bin \
+			$(1)/lib/firmware/; \
+		fi; \
 		if [ "$$(CONFIG_MTK_WIFI_SKU_TYPE)" = "AX4200" ] ; then \
 			$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7986/rebb/MT7986_ePAeLNA_EEPROM_ONEADIE_DBDC.bin \
 			$(1)/lib/firmware/; \
 		fi; \
 	fi; \
 	if [ "$$(CONFIG_MTK_CHIP_MT7916)" = "y" ] ; then \
-		$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7916/rebb/* $(1)/lib/firmware/; \
+		$(INSTALL_BIN) ./files/mt7916-bin/* $(1)/lib/firmware/; \
 	fi; \
 	if [ "$$(CONFIG_MTK_CHIP_MT7981)" = "y" ] ; then \
 		$(INSTALL_BIN) ./files/mt7981-default-eeprom/MT7981_iPAiLNA_EEPROM.bin \
