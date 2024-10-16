@@ -98,6 +98,36 @@ function l1dat_parser.l1_ifname_to_datpath(ifname)
     return devs[ridx][ifname] and devs[ridx][ifname].profile_path
 end
 
+function l1dat_parser.l1_ifname_to_zone(ifname)
+    if not ifname then return end
+
+    local devs = l1dat_parser.load_l1_profile(l1dat_parser.L1_DAT_PATH)
+    if not devs then return end
+
+    local ridx = l1dat_parser.IF_RINDEX
+    return devs[ridx][ifname] and devs[ridx][ifname].nvram_zone
+end
+
+function l1dat_parser.l1_zone_to_ifname(zone)
+    if not zone then return end
+
+    local devs = l1dat_parser.load_l1_profile(l1dat_parser.L1_DAT_PATH)
+    if not devs then return end
+
+    local zone_dev
+    for _, dev in pairs(devs[l1dat_parser.DEV_RINDEX]) do
+        if dev.nvram_zone == zone then
+            zone_dev = dev
+        end
+    end
+
+    if not zone_dev  then
+        return nil
+    else
+        return zone_dev.main_ifname, zone_dev.ext_ifname, zone_dev.apcli_ifname, zone_dev.wds_ifname, zone_dev.mesh_ifname
+    end
+end
+
 -- input: L1 profile path.
 -- output A table, devs, contains
 --   1. devs[%d] = table of each INDEX# in the L1 profile
@@ -118,7 +148,7 @@ function l1dat_parser.load_l1_profile(path)
                            end
                      end
                  })
-    local nixio = require("nixio")
+    --local nixio = require("nixio")
     local chipset_num = {}
     local dir = io.popen("ls /etc/wireless/")
     if not dir then return end
@@ -137,9 +167,9 @@ function l1dat_parser.load_l1_profile(path)
                 k1, k2 = string.match(k, "INDEX(%d+)_(.+)")
                 if k1 then
                     k1 = tonumber(k1) + 1
-                    if devs[k1][k2] then
-                        nixio.syslog("warning", "skip repeated key"..line)
-                    end
+                    --if devs[k1][k2] then
+                    --    nixio.syslog("warning", "skip repeated key"..line)
+                    --end
                     devs[k1][k2] = v or ""
                 else
                     k1 = string.match(k, "INDEX(%d+)")
