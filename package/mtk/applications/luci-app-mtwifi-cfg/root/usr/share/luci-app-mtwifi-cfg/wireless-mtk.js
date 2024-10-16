@@ -342,7 +342,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			this.channels = {
 				'2g': [ 'auto', 'auto', true ],
 				'5g': [ 'auto', 'auto', true ],
-				'6g': [ 'auto', 'auto', true ],
+				'6g': [],
 				'60g': []
 			};
 
@@ -415,8 +415,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				],
 				'ax': [
 					'2g', '2.4 GHz', this.channels['2g'].length > 3,
-					'5g', '5 GHz', this.channels['5g'].length > 3,
-					'6g', '6 GHz', this.channels['6g'].length > 3,
+					'5g', '5 GHz', this.channels['5g'].length > 3
 				]
 			};
 		}, this));
@@ -579,11 +578,14 @@ var CBIWifiFrequencyValue = form.Value.extend({
 	},
 
 	write: function(section_id, value) {
-		if (value[0] && value[1] && value[2])
-		{
-			uci.set('wireless', section_id, 'htmode', value[0]);
-			uci.set('wireless', section_id, 'channel', value[2]);
-		}
+		uci.set('wireless', section_id, 'htmode', value[0] || null);
+
+		if (this.useBandOption)
+			uci.set('wireless', section_id, 'band', value[1]);
+		else
+			uci.set('wireless', section_id, 'hwmode', (value[1] == '2g') ? '11g' : '11a');
+
+		uci.set('wireless', section_id, 'channel', value[2]);
 	}
 });
 
@@ -973,10 +975,10 @@ return view.extend({
 				o.onclick = ui.createHandlerFn(s, network_updown, s.section, s.map);
 
 				if (!isDisabled) {
-					o = ss.taboption('general', CBIWifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
-					o.ucisection = s.section;
-				}
-
+ 					o = ss.taboption('general', CBIWifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
+ 					o.ucisection = s.section;
+ 				}
+ 				
 				if (hwtype == 'mac80211') {
 					o = ss.taboption('general', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'), _('Legacy or badly behaving devices may require legacy 802.11b rates to interoperate. Airtime efficiency may be significantly reduced where these are used. It is recommended to not allow 802.11b rates where possible.'));
 					o.depends({'_freq': '2g', '!contains': true});
@@ -1024,10 +1026,13 @@ return view.extend({
 					o.wifiNetwork = radioNet;
 
 					if (!isDisabled) {
-						o = ss.taboption('advanced', form.Flag, 'noscan', _('Force 40MHz mode'), _('Always use 40MHz channels even if the secondary channel overlaps. Using this option does not comply with IEEE 802.11n-2009!'));
-						o.depends({'_freq': '2g', '!contains': true});
-						o.default = o.disabled;
-						o.rmempty = false;
+						if (band == '2g') {
+							o = ss.taboption('advanced', form.Flag, 'noscan', _('Force 40MHz mode'), _('Always use 40MHz channels even if the secondary channel overlaps. Using this option does not comply with IEEE 802.11n-2009!'));
+							o.depends({'_freq': 'HE40', '!contains': true});
+							o.depends({'_freq': 'HT40', '!contains': true});
+							o.default = o.disabled;
+							o.rmempty = false;
+						}
 
 						o = ss.taboption('advanced', form.Flag, 'mu_beamformer', _('MU-MIMO'));
 						add_dep_he_feature(o);
@@ -1047,7 +1052,15 @@ return view.extend({
 					if (is_dbdc_main)
 					{
 						o = ss.taboption('advanced', form.Flag, 'whnat', _('Wireless HWNAT'));
-						o.default = o.enabled;
+ 						o.default = o.enabled;
+ 						
+ 						o = ss.taboption('advanced', form.Flag, 'bandsteering', _('Band Steering'));
+ 						o.default = o.disabled;
+ 						
+						o = ss.taboption('advanced', form.Value, 'dtim_period', _('DTIM Interval'), _('Delivery Traffic Indication Message Interval'));
+						o.optional = true;
+						o.placeholder = 1;
+						o.datatype = 'range(1,255)';
 	
 						o = ss.taboption('advanced', form.Value, 'beacon_int', _('Beacon Interval'));
 						o.optional = true;
@@ -1318,6 +1331,11 @@ return view.extend({
 					o = ss.taboption('advanced', form.Flag, 'ieee80211k', _('802.11k'), _('Enables The 802.11k standard provides information to discover the best available access point'));
 					o.default = o.enabled;
 					o.depends('mode', 'ap');
+					
+					o = ss.taboption('advanced', form.Flag, 'ieee80211r', _('802.11r'), _('only supports mt_wifi driver'));
+					o.default = o.disabled;
+					o.depends('mode', 'ap');
+
 
 					o = ss.taboption('advanced', form.Value, 'wpa_group_rekey', _('Time interval for rekeying GTK'), _('sec'));
 					o.optional    = true;
@@ -1330,6 +1348,19 @@ return view.extend({
 					o.placeholder = 0;
 					o.datatype = 'range(-100,0)';
 					o.depends('mode', 'ap');
+					
+					o = ss.taboption('advanced', form.Value, 'steeringthresold', _('802.11V roam steering threshold'), _('dBm'));
+					o.optional    = true;
+					o.placeholder = 0;
+					o.datatype = 'range(-100,0)';
+					o.depends('mode', 'ap');
+					
+					o = ss.taboption('advanced', form.DynamicList, 'steeringbssid',_('802.11V roam target bssid'), _('MAC-List'));
+					o.datatype = 'macaddr';
+					o.optional    = true;
+					o.placeholder = 0;
+					o.depends('mode', 'ap');
+					
 
 					o = ss.taboption('advanced', form.Value, 'assocthres', _('Station associate threshold'), _('dBm'));
 					o.optional    = true;
@@ -1347,19 +1378,13 @@ return view.extend({
 					o.depends('mode', 'ap');
 					o.placeholder = 2347;
 
-					o = ss.taboption('advanced', form.Value, 'dtim_period', _('DTIM Interval'), _('Delivery Traffic Indication Message Interval'));
-					o.optional = true;
-					o.placeholder = 1;
-					o.datatype = 'range(1,255)';
-					o.depends('mode', 'ap');
-
 					o = ss.taboption('advanced', form.Flag, 'mumimo_dl', _('MU-MIMO DL'));
 					o.depends('mode', 'ap');
-					o.default = o.disabled;
+					o.default = o.enabled;
 
 					o = ss.taboption('advanced', form.Flag, 'mumimo_ul', _('MU-MIMO UL'));
 					o.depends('mode', 'ap');
-					o.default = o.disabled;
+					o.default = o.enabled;
 
 					o = ss.taboption('advanced', form.Flag, 'ofdma_dl', _('OFDMA DL'));
 					o.depends('mode', 'ap');
@@ -1577,15 +1602,13 @@ return view.extend({
 					crypto_modes.push(['wep-shared', _('WEP Shared Key'),         10]);
 				}
 				else if (hwtype == 'mtwifi') {
-					crypto_modes.push(['sae', 'WPA3-SAE', 31]);
+					crypto_modes.push(['psk2',      'WPA2-PSK',                    35]);
+					crypto_modes.push(['psk',       'WPA-PSK',                     12]);
+					crypto_modes.push(['sae',       'WPA3-SAE',                     31]);
 					crypto_modes.push(['owe', 'OWE', 1]);
-					if (band != '6g') {
-						crypto_modes.push(['psk2', 'WPA2-PSK', 35]);
-						crypto_modes.push(['psk', 'WPA-PSK', 12]);
-						if (ifmode == 'ap') {
-							crypto_modes.push(['psk-mixed', 'WPA-PSK/WPA2-PSK Mixed Mode', 22]);
-							crypto_modes.push(['sae-mixed', 'WPA2-PSK/WPA3-SAE Mixed Mode', 36]);
-						}
+					if (ifmode == 'ap') {
+						crypto_modes.push(['psk-mixed', 'WPA-PSK/WPA2-PSK Mixed Mode', 22]);
+						crypto_modes.push(['sae-mixed', 'WPA2-PSK/WPA3-SAE Mixed Mode', 36]);
 					}
 				}
 
@@ -2009,10 +2032,9 @@ return view.extend({
 
 		s.handleRemove = function(section_id, radioNet, ev) {
 			var radioName = radioNet.getWifiDeviceName();
-			var ifmode = radioNet.getMode();
 			var hwtype = uci.get('wireless', radioName, 'type');
 
-			if (hwtype == 'mtwifi' && ifmode == 'ap')
+			if (hwtype == 'mtwifi')
 			{
 				var wifi_sections = uci.sections('wireless', 'wifi-iface');
 				var mbssid_num = 0;
