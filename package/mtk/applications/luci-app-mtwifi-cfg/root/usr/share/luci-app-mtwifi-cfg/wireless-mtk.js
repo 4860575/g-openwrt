@@ -1048,6 +1048,9 @@ return view.extend({
 					{
 						o = ss.taboption('advanced', form.Flag, 'whnat', _('Wireless HWNAT'));
 						o.default = o.enabled;
+
+ 						o = ss.taboption('advanced', form.Flag, 'bandsteering', _('Band Steering'));
+ 						o.default = o.disabled;
 	
 						o = ss.taboption('advanced', form.Value, 'beacon_int', _('Beacon Interval'));
 						o.optional = true;
