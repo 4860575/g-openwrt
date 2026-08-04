@@ -6,16 +6,13 @@ include $(TOPDIR)/rules.mk
 
 BOARD:=mvebu
 BOARDNAME:=Marvell EBU Armada
-FEATURES:=fpu usb pci pcie gpio nand squashfs ramdisk boot-part rootfs-part
+FEATURES:=fpu usb pci pcie gpio nand squashfs ramdisk boot-part rootfs-part legacy-sdcard targz
 SUBTARGETS:=cortexa9 cortexa53 cortexa72
 
-KERNEL_PATCHVER:=5.4
-KERNEL_TESTING_PATCHVER:=5.4
+KERNEL_PATCHVER:=6.6
 
 include $(INCLUDE_DIR)/target.mk
 
-DEFAULT_PACKAGES += uboot-envtools kmod-gpio-button-hotplug \
-htop ca-bundle wget block-mount e2fsprogs cfdisk kmod-usb-storage-extras kmod-fs-ext4 \
-luci-app-advanced-reboot luci-app-vlmcsd luci-app-upnp autocore-arm
+DEFAULT_PACKAGES += uboot-envtools kmod-gpio-button-hotplug autocore
 
 $(eval $(call BuildTarget))

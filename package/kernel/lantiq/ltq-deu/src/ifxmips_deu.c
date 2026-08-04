@@ -46,6 +46,7 @@
 #include <linux/modversions.h>
 #endif
 #include <linux/module.h>
+#include <linux/mod_devicetable.h>
 #include <linux/init.h>
 #include <linux/types.h>
 #include <linux/errno.h>
@@ -69,6 +70,8 @@
 #endif /* CONFIG_xxxx */
 
 int disable_deudma = 1;
+spinlock_t ltq_deu_hash_lock;
+EXPORT_SYMBOL_GPL(ltq_deu_hash_lock);
 
 void chip_version(void);
 
@@ -84,6 +87,7 @@ static int ltq_deu_probe(struct platform_device *pdev)
 
 
     START_DEU_POWER;
+    CRTCL_SECT_HASH_INIT;
     
 #define IFX_DEU_DRV_VERSION         "2.0.0"
          printk(KERN_INFO "Infineon Technologies DEU driver version %s \n", IFX_DEU_DRV_VERSION);
@@ -192,7 +196,6 @@ static struct platform_driver ltq_deu_driver = {
 	.remove = ltq_deu_remove,
 	.driver = {
 		.name = "deu",
-		.owner = THIS_MODULE,
 		.of_match_table = ltq_deu_match,
 	},
 };
